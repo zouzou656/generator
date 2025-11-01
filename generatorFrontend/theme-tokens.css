@@ -1,0 +1,51 @@
+:root {
+  color-scheme: dark;
+  --bg: 17 21 28;
+  --surface: 28 34 44;
+  --text: 232 238 255;
+  --muted: 136 147 166;
+  --primary: 94 113 255;
+  --primary-contrast: 255 255 255;
+  --success: 64 201 141;
+  --warning: 255 183 77;
+  --danger: 244 99 99;
+  --ring: 94 113 255;
+  --radius: 0.9rem;
+  --shadow: 0 20px 45px -25px rgba(16, 24, 40, 0.65);
+}
+
+[data-theme='soft-light'] {
+  color-scheme: light;
+  --bg: 245 247 252;
+  --surface: 255 255 255;
+  --text: 36 41 56;
+  --muted: 103 113 136;
+  --primary: 54 107 201;
+  --primary-contrast: 255 255 255;
+  --success: 34 197 94;
+  --warning: 234 179 8;
+  --danger: 239 68 68;
+  --ring: 54 107 201;
+  --radius: 0.9rem;
+  --shadow: 0 15px 35px -22px rgba(15, 23, 42, 0.35);
+}
+
+body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+a {
+  color: rgb(var(--primary));
+}
+
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid rgb(var(--ring));
+  outline-offset: 2px;
+}
+

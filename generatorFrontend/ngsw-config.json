@@ -1,0 +1,63 @@
+{
+  "index": "src/index.html",
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(png|jpg|svg|webp)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "portal-pages",
+      "urls": [
+        "/",
+        "/about",
+        "/services",
+        "/contact",
+        "/check-bill"
+      ],
+      "cacheConfig": {
+        "maxSize": 20,
+        "maxAge": "3d",
+        "timeout": "10s",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "mock-api",
+      "urls": [
+        "/assets/mocks/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 60,
+        "maxAge": "12h",
+        "timeout": "10s",
+        "strategy": "performance"
+      }
+    }
+  ]
+}
+
+
+
+
+

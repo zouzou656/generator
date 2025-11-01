@@ -1,0 +1,105 @@
+<section class="mx-auto max-w-6xl px-4 py-16">
+  <!-- Hero Section -->
+  <div class="text-center mb-16">
+    <h1 class="text-5xl font-bold text-text mb-4">{{ 'portal.about.title' | t }}</h1>
+    <p class="mx-auto max-w-3xl text-lg text-muted leading-relaxed">
+      {{ 'portal.about.story' | t }}
+    </p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid gap-6 mb-16 sm:grid-cols-3">
+    <div class="rounded-soft bg-gradient-to-br from-primary/20 to-primary/5 p-8 text-center border border-primary/20 shadow-soft hover:shadow-lg transition-shadow">
+      <div class="text-4xl font-bold text-primary mb-2">25k+</div>
+      <p class="text-sm font-medium uppercase tracking-wide text-muted">{{ 'portal.about.stats.customers' | t }}</p>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-success/20 to-success/5 p-8 text-center border border-success/20 shadow-soft hover:shadow-lg transition-shadow">
+      <div class="text-4xl font-bold text-success mb-2">99.9%</div>
+      <p class="text-sm font-medium uppercase tracking-wide text-muted">{{ 'portal.about.stats.uptime' | t }}</p>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-primary/20 to-primary/5 p-8 text-center border border-primary/20 shadow-soft hover:shadow-lg transition-shadow">
+      <div class="text-4xl font-bold text-primary mb-2">2M+</div>
+      <p class="text-sm font-medium uppercase tracking-wide text-muted">{{ 'portal.about.stats.sms' | t }}</p>
+    </div>
+  </div>
+
+  <!-- Mission Section -->
+  <div class="mb-16">
+    <div class="grid gap-12 lg:grid-cols-2 items-center">
+      <div>
+        <h2 class="text-3xl font-semibold text-text mb-4">Our Mission</h2>
+        <p class="text-muted leading-relaxed mb-4">
+          We empower generator owners across Lebanon to streamline their operations, 
+          delight customers, and grow their businesses through modern technology.
+        </p>
+        <p class="text-muted leading-relaxed">
+          Our platform eliminates manual paperwork, reduces billing errors, and enables 
+          proactive customer communication—all from one integrated workspace.
+        </p>
+      </div>
+      <div class="rounded-soft bg-surface/80 p-8 shadow-soft">
+        <h3 class="text-xl font-semibold text-text mb-4">What We Offer</h3>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3">
+            <span class="text-primary text-xl">✓</span>
+            <span class="text-muted">Automated billing with real-time currency conversion</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-primary text-xl">✓</span>
+            <span class="text-muted">Self-service customer portal for bill lookup</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-primary text-xl">✓</span>
+            <span class="text-muted">SMS campaign management with delivery tracking</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-primary text-xl">✓</span>
+            <span class="text-muted">Comprehensive analytics and reporting</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Values Section -->
+  <div class="rounded-soft bg-surface/50 p-8 mb-16">
+    <h2 class="text-3xl font-semibold text-text mb-8 text-center">Our Values</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="text-center">
+        <div class="text-3xl mb-3">🎯</div>
+        <h3 class="font-semibold text-text mb-2">Reliability</h3>
+        <p class="text-sm text-muted">99.9% uptime ensures your operations never stop</p>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl mb-3">💡</div>
+        <h3 class="font-semibold text-text mb-2">Innovation</h3>
+        <p class="text-sm text-muted">Continuous platform updates and new features</p>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl mb-3">🤝</div>
+        <h3 class="font-semibold text-text mb-2">Support</h3>
+        <p class="text-sm text-muted">Dedicated team ready to help you succeed</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="text-center rounded-soft bg-primary/10 p-8 border border-primary/20">
+    <h2 class="text-2xl font-semibold text-text mb-4">Ready to Transform Your Generator Business?</h2>
+    <p class="text-muted mb-6">Join hundreds of generator owners already using our platform</p>
+    <a routerLink="/contact" class="inline-flex rounded-soft bg-primary px-6 py-3 text-sm font-semibold text-primary-contrast shadow-soft hover:shadow-lg transition-all hover:-translate-y-0.5">
+      Get Started Today
+    </a>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://generator.example/" },
+    { "@type": "ListItem", "position": 2, "name": "About", "item": "https://generator.example/about" }
+  ]
+}
+</script>

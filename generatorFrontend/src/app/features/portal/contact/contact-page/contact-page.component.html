@@ -1,0 +1,139 @@
+<section class="mx-auto max-w-5xl px-4 py-16">
+  <div class="mb-12 text-center">
+    <h1 class="text-5xl font-bold text-text mb-4">{{ 'portal.contact.title' | t }}</h1>
+    <p class="mx-auto max-w-2xl text-lg text-muted">{{ 'portal.contact.subtitle' | t }}</p>
+  </div>
+
+  <div class="grid gap-12 lg:grid-cols-2">
+    <!-- Contact Form -->
+    <div class="card-form">
+      <h2 class="text-xl font-semibold text-text mb-6">Send us a message</h2>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+        <mat-form-field appearance="outline" class="form-field-full">
+          <mat-label>{{ 'portal.contact.fields.name' | t }}</mat-label>
+          <input matInput formControlName="name" required />
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="form.controls.name.hasError('required')">
+            {{ 'common.forms.required' | t }}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'portal.contact.fields.email' | t }}</mat-label>
+            <input matInput formControlName="email" required type="email" />
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="form.controls.email.hasError('required')">
+              {{ 'common.forms.required' | t }}
+            </mat-error>
+            <mat-error *ngIf="form.controls.email.hasError('email')">
+              {{ 'common.forms.invalidEmail' | t }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>{{ 'portal.contact.fields.phone' | t }}</mat-label>
+            <input matInput formControlName="phone" required />
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error *ngIf="form.controls.phone.hasError('required')">
+              {{ 'common.forms.required' | t }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field-full">
+          <mat-label>{{ 'portal.contact.fields.message' | t }}</mat-label>
+          <textarea matInput rows="5" formControlName="message" required></textarea>
+          <mat-error *ngIf="form.controls.message.hasError('required')">
+            {{ 'common.forms.required' | t }}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="submitting || form.invalid"
+            class="flex-1"
+          >
+            <mat-icon *ngIf="!submitting">send</mat-icon>
+            <mat-spinner *ngIf="submitting" diameter="20" class="inline-block"></mat-spinner>
+            <span class="ml-2">{{ submitting ? 'Sending...' : ('portal.contact.submit' | t) }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="space-y-6">
+      <div class="card-form">
+        <h2 class="text-xl font-semibold text-text mb-6">Get in touch</h2>
+        <div class="space-y-4">
+          <div class="flex items-start gap-4">
+            <div class="rounded-full bg-primary/20 p-3">
+              <mat-icon class="text-primary">email</mat-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-text mb-1">Email</h3>
+              <a href="mailto:hello&#64;generator.example" class="text-primary hover:underline">
+                hello&#64;generator.example
+              </a>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="rounded-full bg-primary/20 p-3">
+              <mat-icon class="text-primary">phone</mat-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-text mb-1">Phone</h3>
+              <a href="tel:+9611234567" class="text-primary hover:underline">
+                +961 1 234 567
+              </a>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-4">
+            <div class="rounded-full bg-primary/20 p-3">
+              <mat-icon class="text-primary">location_on</mat-icon>
+            </div>
+            <div>
+              <h3 class="font-semibold text-text mb-1">Office</h3>
+              <p class="text-muted">Beirut, Lebanon</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-form">
+        <h2 class="text-xl font-semibold text-text mb-4">Business Hours</h2>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-muted">Monday - Friday</span>
+            <span class="text-text font-medium">9:00 AM - 6:00 PM</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-muted">Saturday</span>
+            <span class="text-text font-medium">10:00 AM - 2:00 PM</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-muted">Sunday</span>
+            <span class="text-text font-medium">Closed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://generator.example/" },
+    { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://generator.example/contact" }
+  ]
+}
+</script>

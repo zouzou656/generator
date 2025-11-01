@@ -1,0 +1,116 @@
+<h2 mat-dialog-title class="px-6 py-4 border-b border-white/10">
+  {{ (form.value.id ? 'owner.customers.edit' : 'owner.customers.add') | t }}
+</h2>
+<mat-dialog-content class="px-6 py-4">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+    <!-- Customer Details Section -->
+    <div class="form-section">
+      <div class="form-section-title">Customer Details</div>
+      
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" />
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" />
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>{{ 'owner.customers.form.phone' | t }}</mat-label>
+        <input matInput formControlName="phoneNumber" placeholder="+961 70 123 456" required />
+        <mat-icon matPrefix>phone</mat-icon>
+        <mat-error *ngIf="form.controls.phoneNumber.hasError('required')">
+          Phone number is required
+        </mat-error>
+        <mat-error *ngIf="form.controls.phoneNumber.hasError('minlength')">
+          Phone number must be at least 8 characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Subscription Information Section -->
+    <div class="form-section">
+      <div class="form-section-title">Subscription Information</div>
+      
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>{{ 'owner.customers.form.subscription' | t }}</mat-label>
+        <input matInput formControlName="subscriptionNumber" required />
+        <mat-icon matPrefix>badge</mat-icon>
+        <mat-error *ngIf="form.controls.subscriptionNumber.hasError('required')">
+          Subscription number is required
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Zone</mat-label>
+          <input matInput formControlName="zone" placeholder="e.g., Zone A" />
+          <mat-icon matPrefix>location_on</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Subscription Amps</mat-label>
+          <input matInput type="number" step="0.01" formControlName="subscriptionAmps" />
+          <mat-icon matPrefix>bolt</mat-icon>
+          <mat-hint>Amperage capacity</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>{{ 'owner.customers.form.address' | t }}</mat-label>
+        <textarea matInput formControlName="address" rows="2"></textarea>
+        <mat-icon matPrefix>home</mat-icon>
+      </mat-form-field>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Billing Mode</mat-label>
+          <mat-select formControlName="billingMode" required>
+            <mat-option value="METERED">Metered (Based on KVA usage)</mat-option>
+            <mat-option value="FIXED">Fixed (Flat rate)</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>payment</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Default Name on Bill</mat-label>
+          <input matInput formControlName="defaultNameOnBill" />
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-hint>Name to appear on bills</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>{{ 'owner.customers.form.status' | t }}</mat-label>
+        <mat-select formControlName="isActive">
+          <mat-option [value]="true">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-success"></span>
+              Active
+            </span>
+          </mat-option>
+          <mat-option [value]="false">
+            <span class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-muted"></span>
+              Inactive
+            </span>
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>check_circle</mat-icon>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<div mat-dialog-actions class="form-actions px-6 py-4 border-t border-white/10">
+  <button mat-stroked-button type="button" (click)="cancel()">{{ 'common.actions.cancel' | t }}</button>
+  <button mat-raised-button color="primary" type="button" (click)="submit()" [disabled]="form.invalid">
+    <mat-icon>save</mat-icon>
+    <span class="ml-2">{{ 'common.actions.save' | t }}</span>
+  </button>
+</div>

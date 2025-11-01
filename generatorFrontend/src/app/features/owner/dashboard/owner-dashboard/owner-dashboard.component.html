@@ -1,0 +1,34 @@
+@if (data$ | async; as data) {
+<section class="space-y-8">
+  <header class="space-y-2">
+    <h1 class="text-3xl font-semibold text-text">{{ 'owner.nav.dashboard' | t }}</h1>
+    <p class="text-sm text-muted">{{ 'app.tagline' | t }}</p>
+  </header>
+  <div class="grid gap-4 md:grid-cols-4">
+    <article class="rounded-soft border border-white/10 bg-surface/95 p-4 shadow-soft">
+      <div class="text-xs uppercase tracking-wide text-muted">{{ 'owner.dashboard.kpis.customers' | t }}</div>
+      <div class="text-2xl font-semibold text-text">{{ data.kpis.customers }}</div>
+    </article>
+    <article class="rounded-soft border border-white/10 bg-surface/95 p-4 shadow-soft">
+      <div class="text-xs uppercase tracking-wide text-muted">{{ 'owner.dashboard.kpis.subscriptions' | t }}</div>
+      <div class="text-2xl font-semibold text-text">{{ data.kpis.activeSubscriptions }}</div>
+    </article>
+    <article class="rounded-soft border border-white/10 bg-surface/95 p-4 shadow-soft">
+      <div class="text-xs uppercase tracking-wide text-muted">{{ 'owner.dashboard.kpis.pending' | t }}</div>
+      <div class="text-2xl font-semibold text-text">{{ data.kpis.pendingBills }}</div>
+    </article>
+    <article class="rounded-soft border border-white/10 bg-surface/95 p-4 shadow-soft">
+      <div class="text-xs uppercase tracking-wide text-muted">{{ 'owner.dashboard.kpis.sms' | t }}</div>
+      <div class="text-2xl font-semibold text-text">{{ data.kpis.smsSent }}</div>
+    </article>
+  </div>
+
+  <div class="rounded-soft border border-white/10 bg-surface/95 p-4 shadow-soft">
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">{{ 'owner.dashboard.chartTitle' | t }}</h2>
+    <!-- Chart placeholder -->
+    <div class="h-64 flex items-center justify-center text-muted">
+      Chart visualization coming soon
+    </div>
+  </div>
+</section>
+}

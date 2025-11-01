@@ -1,0 +1,264 @@
+{
+  "app": {
+    "title": "Generator Management Platform",
+    "tagline": "Reliable billing, customer care and engagement for energy generators",
+    "offline": "You are working offline. Recent data may be cached.",
+    "retry": "Retry",
+    "comingSoon": "Coming soon"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "contact": "Contact",
+    "checkBill": "Check My Bill",
+    "admin": "Admin",
+    "owner": "Generator Owner",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "theme": {
+    "dark": "Dark",
+    "softLight": "Soft Light"
+  },
+  "language": {
+    "switchTo": "العربية",
+    "current": "English"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "email": "Email address",
+    "password": "Password",
+    "role": "Demo role",
+    "roleAdmin": "Administrator",
+    "roleOwner": "Generator Owner",
+    "remember": "Keep me signed in",
+    "submit": "Continue",
+    "idleWarning": "You have been idle. You will be logged out soon.",
+    "staySignedIn": "Stay signed in",
+    "logoutNow": "Log out now"
+  },
+  "portal": {
+    "breadcrumbs": {
+      "home": "Home",
+      "about": "About",
+      "services": "Services",
+      "contact": "Contact",
+      "checkBill": "Check My Bill"
+    },
+    "home": {
+      "heroTitle": "Running a generator business should feel effortless",
+      "heroSubtitle": "Digitize billing, stay compliant and engage customers in one friendly workspace.",
+      "ctaCheckBill": "Check my bill",
+      "ctaContact": "Talk to us",
+      "value": [
+        {
+          "title": "Automated billing",
+          "text": "Generate and reconcile bills in minutes with automatic currency conversion."
+        },
+        {
+          "title": "Customer delight",
+          "text": "Self-service portals, proactive reminders and powerful analytics." 
+        },
+        {
+          "title": "SMS engagement",
+          "text": "Send targeted campaigns and track delivery in real time."
+        }
+      ]
+    },
+    "about": {
+      "title": "Powering sustainable neighborhoods",
+      "story": "Generator is built for operators who keep communities running. Our team blends energy operations with product design to remove friction for customers and back-office teams alike.",
+      "stats": {
+        "customers": "25k+ households served",
+        "uptime": "99.9% platform uptime",
+        "sms": "2M+ billing SMS sent"
+      }
+    },
+    "services": {
+      "title": "Everything you need to scale",
+      "cards": {
+        "customers": {
+          "title": "Customer Management",
+          "text": "Unified profiles, smart segmentation and service history in one dashboard."
+        },
+        "billing": {
+          "title": "Billing Automation",
+          "text": "Advanced tariff models, metering inputs and instant USD/LBP conversion."
+        },
+        "sms": {
+          "title": "SMS Campaigns",
+          "text": "Campaign builder with delivery tracking and reusable templates."
+        },
+        "payments": {
+          "title": "Payments (coming soon)",
+          "text": "Collect digital payments with automated reconciliation."
+        }
+      }
+    },
+    "contact": {
+      "title": "Talk with our team",
+      "subtitle": "Tell us a little about your operation and we will schedule a tailored walkthrough.",
+      "fields": {
+        "name": "Full name",
+        "email": "Email",
+        "phone": "Phone number",
+        "message": "How can we help?"
+      },
+      "submit": "Send message",
+      "success": "Thanks! We will reach out shortly."
+    },
+    "checkBill": {
+      "title": "Check my bill",
+      "subtitle": "Retrieve the latest billing status using the phone number on your subscription.",
+      "fields": {
+        "phone": "Phone number",
+        "subscription": "Subscription number (optional)"
+      },
+      "validate": {
+        "phone": "Enter a valid Lebanese phone number starting with +961",
+        "subscription": "Subscription numbers are 8 digits"
+      },
+      "submit": "Find my bills",
+      "empty": "No bills found for this phone yet.",
+      "tabs": {
+        "pending": "Pending",
+        "paid": "Paid"
+      },
+      "bill": {
+        "due": "Due",
+        "pay": "Pay now"
+      }
+    }
+  },
+  "admin": {
+    "requests": {
+      "title": "Connection requests",
+      "empty": "No requests waiting for review.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "search": "Search requests",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
+    "users": {
+      "title": "User directory",
+      "invite": "Invite user",
+      "empty": "No users found."
+    },
+    "reports": {
+      "title": "Operational reports",
+      "download": "Download report"
+    }
+  },
+  "owner": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "customers": "Customers",
+      "bills": "Bills",
+      "imports": "Imports",
+      "sms": "SMS",
+      "reports": "Reports"
+    },
+    "dashboard": {
+      "kpis": {
+        "customers": "Customers",
+        "subscriptions": "Active subscriptions",
+        "pending": "Pending bills",
+        "sms": "SMS sent"
+      },
+      "chartTitle": "Monthly billed totals"
+    },
+    "customers": {
+      "title": "Customers",
+      "search": "Search customers",
+      "add": "Add customer",
+      "edit": "Edit customer",
+      "form": {
+        "name": "Full name",
+        "phone": "Phone number",
+        "subscription": "Subscription number",
+        "address": "Address",
+        "status": "Status"
+      }
+    },
+    "bills": {
+      "title": "Bills",
+      "create": "Create bill",
+      "import": "Import bills",
+      "due": "Due date",
+      "amount": "Amount",
+      "status": "Status",
+      "form": {
+        "period": "Billing period",
+        "meter": "Metered consumption (kWh)",
+        "rate": "Rate per kWh",
+        "fixed": "Fixed amount",
+        "usd": "USD value",
+        "lbp": "LBP value",
+        "due": "Due date",
+        "notes": "Notes"
+      }
+    },
+    "sms": {
+      "templates": {
+        "title": "SMS templates",
+        "create": "Create template"
+      },
+      "campaigns": {
+        "title": "Campaigns",
+        "create": "New campaign",
+        "send": "Send campaign",
+        "detail": "Campaign details"
+      }
+    },
+    "imports": {
+      "title": "Imports",
+      "upload": "Upload file",
+      "downloadErrors": "Download errors"
+    },
+    "reports": {
+      "title": "Reports",
+      "export": "Export"
+    }
+  },
+  "common": {
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "paid": "Paid",
+      "overdue": "Overdue"
+    },
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "close": "Close",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "export": "Export",
+      "refresh": "Refresh"
+    },
+    "table": {
+      "noData": "No data available",
+      "showing": "Showing {{count}} items"
+    },
+    "forms": {
+      "required": "This field is required",
+      "invalidEmail": "Enter a valid email",
+      "invalidPhone": "Enter a valid phone number",
+      "invalidNumber": "Enter a valid number"
+    }
+  }
+}
+

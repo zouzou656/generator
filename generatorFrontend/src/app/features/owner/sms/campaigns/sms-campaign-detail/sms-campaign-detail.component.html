@@ -1,0 +1,119 @@
+<ng-container *ngIf="campaign$ | async as campaign; else missing">
+  <section class="space-y-6">
+    <a routerLink="/owner/sms/campaigns" class="inline-flex items-center gap-2 text-sm text-primary hover:underline mb-4">
+      <mat-icon class="text-base">arrow_back</mat-icon>
+      Back to Campaigns
+    </a>
+
+    <!-- Campaign Header -->
+    <div class="card-form">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h1 class="text-3xl font-semibold text-text mb-2">{{ campaign.title }}</h1>
+          <p class="text-sm text-muted">
+            Created {{ campaign.createdAt | date: 'medium' }}
+            <span *ngIf="campaign.relatedPeriodYear && campaign.relatedPeriodMonth">
+              · Period: {{ formatPeriod(campaign.relatedPeriodYear, campaign.relatedPeriodMonth) }}
+            </span>
+          </p>
+        </div>
+        <mat-chip [color]="getStatusColor(campaign.status)" selected>
+          {{ campaign.status }}
+        </mat-chip>
+      </div>
+
+      <!-- Campaign Message Preview -->
+      <div class="rounded-soft border border-primary border-opacity-20 bg-primary bg-opacity-5 p-4 mb-4">
+        <div class="text-sm font-semibold text-text mb-2">Campaign Message</div>
+        <div class="whitespace-pre-wrap text-sm">{{ campaign.messageBody || 'No message' }}</div>
+      </div>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div class="grid gap-4 md:grid-cols-4" *ngIf="messages$ | async as messages">
+      <div class="rounded-soft bg-success bg-opacity-10 p-6 text-center border border-success border-opacity-20">
+        <div class="text-3xl font-bold text-success mb-2">
+          {{ getDeliveredCount(messages) }}
+        </div>
+        <div class="text-xs font-medium uppercase tracking-wide text-muted">Delivered</div>
+      </div>
+      <div class="rounded-soft bg-warning bg-opacity-10 p-6 text-center border border-warning border-opacity-20">
+        <div class="text-3xl font-bold text-warning mb-2">
+          {{ getPendingCount(messages) }}
+        </div>
+        <div class="text-xs font-medium uppercase tracking-wide text-muted">Pending</div>
+      </div>
+      <div class="rounded-soft bg-danger bg-opacity-10 p-6 text-center border border-danger border-opacity-20">
+        <div class="text-3xl font-bold text-danger mb-2">
+          {{ getFailedCount(messages) }}
+        </div>
+        <div class="text-xs font-medium uppercase tracking-wide text-muted">Failed</div>
+      </div>
+      <div class="rounded-soft bg-primary bg-opacity-10 p-6 text-center border border-primary border-opacity-20">
+        <div class="text-3xl font-bold text-primary mb-2">
+          {{ messages.length }}
+        </div>
+        <div class="text-xs font-medium uppercase tracking-wide text-muted">Total</div>
+      </div>
+    </div>
+
+    <!-- Messages Table -->
+    <div class="card-form">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-text">Message Delivery Status</h2>
+        <button mat-stroked-button (click)="refreshMessages()">
+          <mat-icon>refresh</mat-icon>
+          <span class="ml-2">Refresh</span>
+        </button>
+      </div>
+
+      <div class="overflow-x-auto" *ngIf="(messages$ | async) as messages">
+        <table class="w-full text-sm" *ngIf="messages.length > 0">
+          <thead>
+            <tr class="border-b border-white border-opacity-10">
+              <th class="text-left py-3 px-4 font-semibold text-text">Phone Number</th>
+              <th class="text-left py-3 px-4 font-semibold text-text">Subscription</th>
+              <th class="text-left py-3 px-4 font-semibold text-text">Status</th>
+              <th class="text-left py-3 px-4 font-semibold text-text">Sent At</th>
+              <th class="text-left py-3 px-4 font-semibold text-text">Delivered At</th>
+              <th class="text-left py-3 px-4 font-semibold text-text">Error</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let message of messages" class="border-b border-white border-opacity-5 hover:bg-surface hover:bg-opacity-50">
+              <td class="py-3 px-4">{{ message.phoneNumber || message.recipient }}</td>
+              <td class="py-3 px-4 text-muted">-</td>
+              <td class="py-3 px-4">
+                <mat-chip [color]="getMessageStatusColor(message.status)" selected class="text-xs">
+                  {{ message.status }}
+                </mat-chip>
+              </td>
+              <td class="py-3 px-4 text-muted">
+                {{ message.sentAt ? (message.sentAt | date: 'short') : '-' }}
+              </td>
+              <td class="py-3 px-4 text-muted">
+                {{ message.deliveredAt ? (message.deliveredAt | date: 'short') : '-' }}
+              </td>
+              <td class="py-3 px-4 text-danger text-xs">
+                {{ message.errorMessage || '-' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div *ngIf="messages.length === 0" class="rounded-soft border border-white border-opacity-10 bg-surface bg-opacity-50 px-8 py-12 text-center">
+          <mat-icon class="text-6xl text-muted mb-4">message</mat-icon>
+          <h3 class="text-lg font-semibold text-text mb-2">No messages yet</h3>
+          <p class="text-sm text-muted">Messages will appear here once the campaign is sent</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</ng-container>
+
+<ng-template #missing>
+  <div class="rounded-soft border border-white border-opacity-10 bg-surface bg-opacity-95 px-4 py-6 text-center text-sm text-muted">
+    <mat-icon class="text-4xl mb-2">error_outline</mat-icon>
+    <p>Campaign not found.</p>
+  </div>
+</ng-template>

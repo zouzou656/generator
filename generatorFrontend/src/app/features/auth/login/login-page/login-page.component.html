@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="grid gap-4">
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'auth.email' | t }}</mat-label>
+    <input matInput formControlName="email" type="email" required />
+    <mat-error *ngIf="form.controls.email.hasError('required')">{{ 'common.forms.required' | t }}</mat-error>
+    <mat-error *ngIf="form.controls.email.hasError('email')">{{ 'common.forms.invalidEmail' | t }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'auth.password' | t }}</mat-label>
+    <input matInput formControlName="password" type="password" required />
+    <mat-error *ngIf="form.controls.password.hasError('required')">{{ 'common.forms.required' | t }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'auth.role' | t }}</mat-label>
+    <mat-select formControlName="role">
+      <mat-option value="ADMIN">{{ 'auth.roleAdmin' | t }}</mat-option>
+      <mat-option value="GENERATOR_OWNER">{{ 'auth.roleOwner' | t }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-slide-toggle formControlName="remember">{{ 'auth.remember' | t }}</mat-slide-toggle>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="loading">{{ 'auth.submit' | t }}</button>
+</form>

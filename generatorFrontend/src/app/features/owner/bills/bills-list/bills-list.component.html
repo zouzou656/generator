@@ -1,0 +1,140 @@
+<section class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-3xl font-semibold text-text">{{ 'owner.bills.title' | t }}</h1>
+      <p class="text-sm text-muted mt-1">View and manage all customer bills</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="navigateToCreate()">
+      <mat-icon>add</mat-icon>
+      <span class="ml-2">{{ 'owner.bills.create' | t }}</span>
+    </button>
+  </div>
+
+  <!-- Stats Summary -->
+  <div class="grid gap-4 md:grid-cols-4" *ngIf="bills$ | async as bills">
+    <div class="rounded-soft bg-gradient-to-br from-primary/20 to-primary/5 p-4 text-center border border-primary/20">
+      <div class="text-2xl font-bold text-primary mb-1">{{ bills.length }}</div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Total Bills</div>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-warning/20 to-warning/5 p-4 text-center border border-warning/20">
+      <div class="text-2xl font-bold text-warning mb-1">
+        {{ getPendingCount(bills) }}
+      </div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Pending</div>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-success/20 to-success/5 p-4 text-center border border-success/20">
+      <div class="text-2xl font-bold text-success mb-1">
+        {{ getPaidCount(bills) }}
+      </div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Paid</div>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-primary/20 to-primary/5 p-4 text-center border border-primary/20">
+      <div class="text-lg font-bold text-primary mb-1">
+        {{ formatUsd(getTotalAmount(bills)) }}
+      </div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Total Amount</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card-form">
+    <div class="flex items-center gap-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by Status</mat-label>
+        <mat-select [value]="statusFilter()" (selectionChange)="statusFilter.set($event.value)">
+          <mat-option value="ALL">All Bills</mat-option>
+          <mat-option value="PENDING">Pending</mat-option>
+          <mat-option value="PAID">Paid</mat-option>
+          <mat-option value="CANCELLED">Cancelled</mat-option>
+        </mat-select>
+        <mat-icon matPrefix>filter_list</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Bills Table -->
+  <div class="card-form" *ngIf="bills$ | async as bills">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-white/10">
+            <th class="text-left py-3 px-4 font-semibold text-text">Customer</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Period</th>
+            <th class="text-right py-3 px-4 font-semibold text-text">Amount</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Due Date</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Status</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let bill of getFilteredBills(bills)"
+            class="border-b border-white/5 hover:bg-surface/50 transition-colors"
+          >
+            <td class="py-3 px-4">
+              <div class="font-semibold text-text">{{ bill.nameOnBill || 'N/A' }}</div>
+            </td>
+            <td class="py-3 px-4">
+              {{ formatPeriod(bill.periodYear, bill.periodMonth) || bill.period || '-' }}
+            </td>
+            <td class="py-3 px-4 text-right">
+              <div class="font-semibold text-text">
+                {{ formatUsd(bill.totalAmount || bill.amountUSD || 0) }}
+              </div>
+              <div class="text-xs text-muted" *ngIf="bill.amountLBP">
+                {{ bill.amountLBP | number }} LBP
+              </div>
+            </td>
+            <td class="py-3 px-4 text-muted">
+              {{ bill.dueDate ? formatDate(bill.dueDate) : '-' }}
+            </td>
+            <td class="py-3 px-4">
+              <mat-chip [color]="getStatusColor(bill.status)" selected class="text-xs">
+                {{ bill.status }}
+              </mat-chip>
+            </td>
+            <td class="py-3 px-4">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                  <mat-icon>visibility</mat-icon>
+                  <span>View Details</span>
+                </button>
+                <button mat-menu-item *ngIf="bill.status === 'PENDING'">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item *ngIf="bill.status === 'PENDING'">
+                  <mat-icon>mark_as_paid</mat-icon>
+                  <span>Mark as Paid</span>
+                </button>
+                <button mat-menu-item *ngIf="bill.status !== 'CANCELLED'">
+                  <mat-icon>cancel</mat-icon>
+                  <span>Cancel</span>
+                </button>
+              </mat-menu>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="getFilteredBills(bills).length === 0" class="px-8 py-12 text-center">
+      <mat-icon class="text-6xl text-muted mb-4">receipt</mat-icon>
+      <h3 class="text-lg font-semibold text-text mb-2">No bills found</h3>
+      <p class="text-sm text-muted mb-6" *ngIf="statusFilter() === 'ALL'">
+        Create your first bill to get started
+      </p>
+      <p class="text-sm text-muted mb-6" *ngIf="statusFilter() !== 'ALL'">
+        No bills with status "{{ statusFilter() }}"
+      </p>
+      <button mat-raised-button color="primary" (click)="navigateToCreate()" *ngIf="statusFilter() === 'ALL'">
+        <mat-icon>add</mat-icon>
+        <span class="ml-2">{{ 'owner.bills.create' | t }}</span>
+      </button>
+    </div>
+  </div>
+</section>

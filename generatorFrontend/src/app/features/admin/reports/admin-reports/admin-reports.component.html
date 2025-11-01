@@ -1,0 +1,16 @@
+<section class="space-y-6" *ngIf="summary$ | async as summary">
+  <h1 class="text-2xl font-semibold text-text">{{ 'admin.reports.title' | t }}</h1>
+  <div class="grid gap-4 md:grid-cols-2">
+    <article class="rounded-soft border border-white/10 bg-surface/95 p-5 shadow-soft">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Requests</h2>
+      <p class="mt-2 text-3xl font-semibold text-text">{{ summary.totalRequests }}</p>
+      <p class="text-xs text-muted">{{ summary.pendingRequests }} pending approvals</p>
+    </article>
+    <article class="rounded-soft border border-white/10 bg-surface/95 p-5 shadow-soft">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-muted">Bills</h2>
+      <p class="mt-2 text-3xl font-semibold text-text">{{ summary.totalBills }}</p>
+      <p class="text-xs text-muted">{{ summary.cancelledBills }} cancelled</p>
+    </article>
+  </div>
+  <button mat-stroked-button color="primary">{{ 'admin.reports.download' | t }}</button>
+</section>

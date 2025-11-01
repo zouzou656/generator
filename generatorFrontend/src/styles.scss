@@ -1,0 +1,597 @@
+@import '../theme-tokens.css';
+
+// Angular Material Base Theme (using CSS variables)
+// Note: Material 19 uses CSS variables, so we define the essential ones here
+html {
+  --mdc-theme-primary: rgb(var(--primary));
+  --mdc-theme-on-primary: rgb(var(--primary-contrast));
+  --mdc-theme-surface: rgb(var(--surface));
+  --mdc-theme-on-surface: rgb(var(--text));
+  --mdc-theme-error: rgb(var(--danger));
+  --mdc-theme-on-error: rgb(var(--primary-contrast));
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-feature-settings: 'liga' 1, 'tnum' 1, 'case' 1;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(var(--bg));
+  background-image: 
+    radial-gradient(at 0% 0%, rgb(var(--primary) / 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgb(var(--primary) / 0.02) 0px, transparent 50%);
+  color: rgb(var(--text));
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+body[data-app-shell] {
+  display: flex;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: rgb(var(--bg));
+}
+
+.app-shell__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+[dir='rtl'] .rotate-rtl {
+  transform: rotate(180deg);
+}
+
+.surface-card {
+  background: rgb(var(--surface));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+// Angular Material Theme Customization
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: rgb(var(--surface));
+  --mat-mdc-snack-bar-button-color: rgb(var(--primary));
+  --mdc-snackbar-supporting-text-color: rgb(var(--text));
+}
+
+// Material theme variables using our design tokens
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: calc(var(--radius) * 0.75);
+  --mat-form-field-container-text-color: rgb(var(--text));
+  --mat-form-field-label-text-color: rgb(var(--muted));
+  --mat-form-field-focus-label-text-color: rgb(var(--primary));
+  --mat-form-field-outline-color: rgb(var(--muted) / 0.25);
+  --mat-form-field-focus-outline-color: rgb(var(--primary));
+  --mat-form-field-container-background-color: rgb(var(--surface));
+  --mat-form-field-error-text-color: rgb(var(--danger));
+  --mat-form-field-hover-outline-color: rgb(var(--primary) / 0.4);
+}
+
+.mat-mdc-button {
+  --mat-filled-button-container-color: rgb(var(--primary));
+  --mat-filled-button-label-text-color: rgb(var(--primary-contrast));
+  --mat-outlined-button-outline-color: rgb(var(--primary));
+  --mat-outlined-button-label-text-color: rgb(var(--primary));
+}
+
+.mat-mdc-select {
+  --mat-select-panel-background-color: rgb(var(--surface));
+  --mat-select-enabled-trigger-text-color: rgb(var(--text));
+  --mat-select-disabled-trigger-text-color: rgb(var(--muted));
+  --mat-select-focused-trigger-text-color: rgb(var(--primary));
+}
+
+// Enhanced Select Dropdowns
+.mat-mdc-select-panel {
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.25), 
+              0 4px 12px -4px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgb(var(--muted) / 0.15);
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  
+  .mat-mdc-option {
+    padding: 0.75rem 1.25rem;
+    transition: all 0.15s ease;
+    border-radius: 0;
+    
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: rgb(var(--primary) / 0.08);
+    }
+    
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: rgb(var(--primary) / 0.15);
+      font-weight: 600;
+      color: rgb(var(--primary));
+    }
+    
+    &:focus:not(.mdc-list-item--disabled) {
+      background-color: rgb(var(--primary) / 0.12);
+    }
+  }
+}
+
+// Enhanced Chips
+.mat-mdc-chip {
+  border-radius: calc(var(--radius) * 0.6);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.75rem;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+// Global button enhancements - Modern & Beautiful
+.mat-mdc-raised-button,
+.mat-mdc-button.mat-mdc-raised-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  border-radius: calc(var(--radius) * 0.75);
+  padding: 0.625rem 1.5rem;
+  min-height: 44px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.2), 
+                0 4px 8px -2px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .mat-icon {
+    margin-right: 0.5rem;
+  }
+}
+
+.mat-mdc-stroked-button,
+.mat-mdc-button.mat-mdc-stroked-button {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  border-radius: calc(var(--radius) * 0.75);
+  padding: 0.625rem 1.5rem;
+  min-height: 44px;
+  border-width: 1.5px;
+  
+  &:hover:not(:disabled) {
+    background-color: rgb(var(--primary) / 0.08);
+    border-color: rgb(var(--primary));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    background-color: rgb(var(--primary) / 0.12);
+  }
+  
+  .mat-icon {
+    margin-right: 0.5rem;
+  }
+}
+
+.mat-mdc-icon-button {
+  transition: all 0.2s ease;
+  border-radius: calc(var(--radius) * 0.6);
+  
+  &:hover:not(:disabled) {
+    background-color: rgb(var(--primary) / 0.1);
+    transform: scale(1.05);
+  }
+  
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+}
+
+// Smooth scrolling
+html {
+  scroll-behavior: smooth;
+}
+
+// Enhanced focus styles
+*:focus-visible {
+  outline: 2px solid rgb(var(--ring));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+// Enhanced Form Styling - Beautiful Modern Design
+.mat-mdc-form-field {
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+  
+  // Enhanced wrapper with subtle shadows and smooth transitions
+  .mat-mdc-text-field-wrapper {
+    background-color: rgb(var(--surface));
+    border-radius: calc(var(--radius) * 0.75);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    
+    &:hover {
+      background-color: rgb(var(--surface) / 0.98);
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12);
+    }
+  }
+  
+  // Focused state with beautiful glow
+  &.mat-focused {
+    .mat-mdc-text-field-wrapper {
+      box-shadow: 0 0 0 3px rgb(var(--primary) / 0.15), 
+                  0 4px 12px 0 rgba(0, 0, 0, 0.15);
+      background-color: rgb(var(--surface));
+      transform: translateY(-1px);
+    }
+    
+    .mat-mdc-form-field-label {
+      color: rgb(var(--primary)) !important;
+      font-weight: 600;
+    }
+  }
+  
+  // Label styling
+  .mat-mdc-form-field-label {
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    transition: all 0.2s ease;
+  }
+  
+  // Input element styling
+  .mat-mdc-input-element {
+    font-size: 0.9375rem;
+    padding: 0.875rem 0;
+    color: rgb(var(--text));
+    letter-spacing: 0.01em;
+    
+    &::placeholder {
+      color: rgb(var(--muted));
+      opacity: 0.6;
+    }
+  }
+  
+  // Prefix/Suffix icons
+  .mat-mdc-form-field-icon-prefix,
+  .mat-mdc-form-field-icon-suffix {
+    color: rgb(var(--muted));
+    transition: color 0.2s ease;
+  }
+  
+  &.mat-focused {
+    .mat-mdc-form-field-icon-prefix,
+    .mat-mdc-form-field-icon-suffix {
+      color: rgb(var(--primary));
+    }
+  }
+  
+  // Outline styling
+  .mat-mdc-text-field-input-control .mat-mdc-form-field-text-control {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  // Error state
+  &.mat-form-field-invalid {
+    .mat-mdc-text-field-wrapper {
+      box-shadow: 0 0 0 2px rgb(var(--danger) / 0.2);
+    }
+    
+    &.mat-focused .mat-mdc-text-field-wrapper {
+      box-shadow: 0 0 0 3px rgb(var(--danger) / 0.25), 
+                  0 4px 12px 0 rgba(244, 99, 99, 0.15);
+    }
+  }
+  
+  // Disabled state
+  &.mat-form-field-disabled {
+    opacity: 0.6;
+    .mat-mdc-text-field-wrapper {
+      background-color: rgb(var(--muted) / 0.1);
+      box-shadow: none;
+    }
+  }
+  
+  // Hints styling
+  .mat-mdc-form-field-hint {
+    color: rgb(var(--muted));
+    font-size: 0.8125rem;
+    margin-top: 0.375rem;
+  }
+  
+  // Error messages
+  .mat-mdc-form-field-error {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: 0.375rem;
+    color: rgb(var(--danger));
+    animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    
+    &::before {
+      content: '⚠';
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Enhanced button groups
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgb(var(--muted) / 0.2);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  
+  @media (max-width: 640px) {
+    flex-direction: column-reverse;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Enhanced form sections - Beautiful Cards
+.form-section {
+  background: linear-gradient(to bottom, rgb(var(--surface)), rgb(var(--surface) / 0.95));
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgb(var(--muted) / 0.15);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
+    border-color: rgb(var(--primary) / 0.2);
+  }
+  
+  &-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: rgb(var(--text));
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: -0.01em;
+    
+    &::before {
+      content: '';
+      width: 4px;
+      height: 1.5rem;
+      background: linear-gradient(to bottom, rgb(var(--primary)), rgb(var(--primary) / 0.7));
+      border-radius: 2px;
+      box-shadow: 0 2px 4px 0 rgb(var(--primary) / 0.3);
+    }
+  }
+}
+
+// Enhanced card forms - Modern Card Design
+.card-form {
+  background: linear-gradient(to bottom, rgb(var(--surface)), rgb(var(--surface) / 0.98));
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.12), 
+              0 2px 8px -2px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgb(var(--muted) / 0.15);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  
+  &:hover {
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.16), 
+                0 4px 12px -4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 640px) {
+    padding: 1.75rem;
+    border-radius: calc(var(--radius) * 0.85);
+  }
+}
+
+// Two-column form layout
+.form-grid {
+  display: grid;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  &.form-grid-full {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Form field full width
+.form-field-full {
+  width: 100%;
+}
+
+// Enhanced error messages
+.mat-mdc-form-field-error {
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: rgb(var(--danger) / 0.1);
+  border-radius: calc(var(--radius) * 0.5);
+  border-left: 3px solid rgb(var(--danger));
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Smooth fade-in animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Typography improvements
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+// General UI improvements
+section {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.card, .surface-card {
+  animation: slideUp 0.3s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Improved spacing utilities
+.space-y-6 > * + * {
+  margin-top: 2rem;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1.5rem;
+}
+
+.space-y-2 > * + * {
+  margin-top: 0.75rem;
+}
+
+// Enhanced links
+a {
+  transition: all 0.2s ease;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+// Improved scrollbar (webkit)
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--surface));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--muted) / 0.3);
+  border-radius: 5px;
+  transition: background 0.2s ease;
+  
+  &:hover {
+    background: rgb(var(--muted) / 0.5);
+  }
+}
+
+// Loading spinner improvements
+mat-spinner {
+  margin: 0 auto;
+}
+
+// Material Icon improvements
+mat-icon {
+  vertical-align: middle;
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+// Slide toggle improvements
+.mat-mdc-slide-toggle {
+  .mdc-switch {
+    --mdc-switch-selected-track-color: rgb(var(--primary));
+    --mdc-switch-selected-handle-color: rgb(var(--primary-contrast));
+  }
+}

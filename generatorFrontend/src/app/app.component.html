@@ -1,0 +1,22 @@
+
+
+<div class="min-h-screen bg-bg text-text">
+  <div
+    *ngIf="offline()"
+    class="flex items-center justify-center bg-warning/10 px-4 py-3 text-sm text-warning"
+    role="status"
+  >
+    {{ 'app.offline' | t }}
+  </div>
+  <div
+    *ngIf="updateAvailable()"
+    class="sticky bottom-4 left-0 right-0 z-50 mx-auto flex max-w-md items-center justify-between rounded-soft bg-primary px-4 py-3 text-sm text-primary-contrast shadow-soft"
+    role="alert"
+  >
+    <span>New update available.</span>
+    <button class="rounded-soft bg-primary-contrast/20 px-3 py-1 text-primary-contrast" (click)="reloadForUpdate()">
+      Refresh
+    </button>
+  </div>
+  <router-outlet></router-outlet>
+</div>

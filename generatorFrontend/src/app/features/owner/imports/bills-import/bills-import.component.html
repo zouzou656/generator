@@ -1,0 +1,179 @@
+<section class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold text-text">{{ 'owner.imports.title' | t }}</h1>
+      <p class="text-sm text-muted mt-1">Import bills from CSV/Excel files in bulk</p>
+    </div>
+  </div>
+
+  <!-- File Upload Area -->
+  <div class="card-form">
+    <h2 class="text-xl font-semibold text-text mb-4">Upload File</h2>
+    
+    <div 
+      class="border-2 border-dashed rounded-soft p-12 text-center transition-all"
+      [class]="getUploadAreaClass()"
+      (dragover)="$event.preventDefault()"
+      (drop)="onFileDrop($event)"
+      (click)="fileInput.click()"
+    >
+      <input 
+        #fileInput
+        type="file" 
+        accept=".csv,.xlsx,.xls" 
+        (change)="onFileSelected($event)" 
+        class="hidden"
+      />
+      
+      <mat-icon class="text-6xl text-muted mb-4" *ngIf="!selectedFile">cloud_upload</mat-icon>
+      <mat-icon class="text-6xl text-success mb-4" *ngIf="selectedFile && !parsingError">check_circle</mat-icon>
+      
+      <p class="text-lg font-semibold text-text mb-2" *ngIf="!selectedFile">
+        Drag and drop your file here, or click to browse
+      </p>
+      <p class="text-sm text-muted mb-4" *ngIf="selectedFile">
+        {{ selectedFile.name }} ({{ formatFileSize(selectedFile.size) }})
+      </p>
+      <p class="text-xs text-muted">Supports CSV and Excel files (.csv, .xlsx, .xls)</p>
+      
+      <button mat-stroked-button class="mt-4" (click)="$event.stopPropagation()">
+        <mat-icon>file_upload</mat-icon>
+        <span class="ml-2">Select File</span>
+      </button>
+    </div>
+
+    <!-- File Format Help -->
+    <div class="rounded-soft border border-primary border-opacity-20 bg-primary bg-opacity-5 p-4 mt-4">
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="text-sm font-semibold text-text">Expected File Format</h3>
+        <button mat-stroked-button size="small" (click)="downloadTemplate()">
+          <mat-icon class="text-sm">download</mat-icon>
+          <span class="ml-1 text-xs">Download Template</span>
+        </button>
+      </div>
+      <div class="text-xs text-muted space-y-1">
+        <p><strong>Required columns:</strong> subscriptionNumber, periodYear, periodMonth, totalAmount</p>
+        <p><strong>Optional columns:</strong> previousKva, currentKva, subscriptionFeeVar, subscriptionFeeFixed, nameOnBill, dueDate, notes, subscriptionAmps</p>
+        <p class="mt-2"><strong>Period format:</strong> periodYear (e.g., 2025), periodMonth (1-12)</p>
+      </div>
+    </div>
+
+    <!-- Parsing Errors -->
+    <div *ngIf="parsingError" class="mt-4 rounded-soft border border-danger border-opacity-40 bg-danger bg-opacity-10 px-4 py-3">
+      <div class="flex items-start gap-2">
+        <mat-icon class="text-danger">error</mat-icon>
+        <div class="flex-1">
+          <p class="text-sm font-semibold text-danger mb-1">File Parsing Error</p>
+          <p class="text-sm text-danger">{{ parsingError }}</p>
+        </div>
+        <button mat-icon-button (click)="clearFile()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Preview -->
+  <div class="card-form" *ngIf="rows.length > 0">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-text">
+        Data Preview ({{ rows.length }} rows)
+      </h2>
+      <button mat-stroked-button (click)="clearFile()">
+        <mat-icon>clear</mat-icon>
+        <span class="ml-2">Clear</span>
+      </button>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-white border-opacity-10">
+            <th class="text-left py-3 px-4 font-semibold text-text">Subscription</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Period</th>
+            <th class="text-right py-3 px-4 font-semibold text-text">Amount</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Due Date</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            *ngFor="let row of rowsWithErrors()" 
+            class="border-b border-white border-opacity-5 hover:bg-surface hover:bg-opacity-50"
+            [class]="row.hasError ? 'bg-danger bg-opacity-10' : ''"
+          >
+            <td class="py-3 px-4">{{ row.subscriptionNumber || '-' }}</td>
+            <td class="py-3 px-4">{{ formatPeriod(row) }}</td>
+            <td class="py-3 px-4 text-right">{{ row.totalAmount || row.amountUSD | number: '1.2-2' }}</td>
+            <td class="py-3 px-4">{{ row.dueDate || '-' }}</td>
+            <td class="py-3 px-4">
+              <span 
+                class="text-xs px-2 py-1 rounded-full"
+                [class]="row.hasError ? 'bg-danger bg-opacity-20 text-danger' : 'bg-success bg-opacity-20 text-success'"
+              >
+                {{ row.hasError ? 'Error' : 'Valid' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-actions mt-6">
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="submit()" 
+        [disabled]="importing || !rows.length || hasAnyErrors()"
+        class="flex-1"
+      >
+        <mat-spinner *ngIf="importing" diameter="20" class="inline-block mr-2"></mat-spinner>
+        <mat-icon *ngIf="!importing">cloud_upload</mat-icon>
+        <span class="ml-2">
+          {{ importing ? 'Importing...' : ('owner.imports.upload' | t) }} ({{ rows.length }} rows)
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Import History -->
+  <div class="card-form" *ngIf="importBatches.length > 0">
+    <h2 class="text-xl font-semibold text-text mb-4">Recent Imports</h2>
+    <div class="space-y-3">
+      <div 
+        *ngFor="let batch of importBatches" 
+        class="flex items-center justify-between p-4 rounded-soft border border-white border-opacity-10 bg-surface bg-opacity-50"
+      >
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-semibold text-text">{{ batch.filename || batch.originalFilename }}</span>
+            <mat-chip [color]="getBatchStatusColor(batch.status)" selected class="text-xs">
+              {{ batch.status }}
+            </mat-chip>
+          </div>
+          <div class="text-xs text-muted">
+            {{ batch.createdAt | date: 'medium' }} · 
+            {{ batch.processedRows || 0 }}/{{ batch.totalRows || 0 }} processed · 
+            {{ batch.errorCount || 0 }} errors
+          </div>
+        </div>
+        <button mat-icon-button [matMenuTriggerFor]="batchMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #batchMenu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>visibility</mat-icon>
+            <span>View Details</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!selectedFile && importBatches.length === 0" class="rounded-soft border border-white border-opacity-10 bg-surface bg-opacity-90 px-8 py-12 text-center">
+    <mat-icon class="text-6xl text-muted mb-4">upload_file</mat-icon>
+    <h3 class="text-lg font-semibold text-text mb-2">No imports yet</h3>
+    <p class="text-sm text-muted mb-6">Upload your first CSV or Excel file to get started</p>
+  </div>
+</section>

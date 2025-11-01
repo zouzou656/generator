@@ -1,0 +1,129 @@
+<section class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-3xl font-semibold text-text">{{ 'owner.customers.title' | t }}</h1>
+      <p class="text-sm text-muted mt-1">Manage your customer subscriptions and billing information</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="openDialog(null)">
+      <mat-icon>add</mat-icon>
+      <span class="ml-2">{{ 'owner.customers.add' | t }}</span>
+    </button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="grid gap-4 md:grid-cols-4" *ngIf="customers$ | async as customers">
+    <div class="rounded-soft bg-gradient-to-br from-primary/20 to-primary/5 p-4 text-center border border-primary/20">
+      <div class="text-2xl font-bold text-primary mb-1">{{ customers.length }}</div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Total Customers</div>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-success/20 to-success/5 p-4 text-center border border-success/20">
+      <div class="text-2xl font-bold text-success mb-1">
+        {{ getActiveCount(customers) }}
+      </div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Active</div>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-muted/20 to-muted/5 p-4 text-center border border-muted/20">
+      <div class="text-2xl font-bold text-muted mb-1">
+        {{ getInactiveCount(customers) }}
+      </div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Inactive</div>
+    </div>
+    <div class="rounded-soft bg-gradient-to-br from-warning/20 to-warning/5 p-4 text-center border border-warning/20">
+      <div class="text-2xl font-bold text-warning mb-1">
+        {{ getPendingCount(customers) }}
+      </div>
+      <div class="text-xs font-medium uppercase tracking-wide text-muted">Pending</div>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="card-form">
+    <mat-form-field appearance="outline" class="form-field-full">
+      <mat-label>{{ 'owner.customers.search' | t }}</mat-label>
+      <input matInput 
+        type="search"
+        placeholder="Search by name, phone, subscription, or address..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
+      <mat-icon matPrefix>search</mat-icon>
+      <button mat-icon-button matSuffix *ngIf="searchTerm()" (click)="searchTerm.set('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!-- Customers Grid -->
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" *ngIf="customers$ | async as customers">
+    <article
+      *ngFor="let customer of customers"
+      class="rounded-soft border border-white/10 bg-surface/95 p-6 shadow-soft hover:shadow-lg hover:border-primary/30 transition-all"
+      [hidden]="searchTerm() && !matchesSearch(customer)"
+    >
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex-1">
+          <h2 class="text-lg font-semibold text-text mb-1">
+            {{ getCustomerName(customer) }}
+          </h2>
+          <div class="flex items-center gap-2 text-sm text-muted mb-2">
+            <mat-icon class="text-base">phone</mat-icon>
+            <span>{{ customer.phoneNumber }}</span>
+          </div>
+          <div class="flex items-center gap-2 text-sm text-muted">
+            <mat-icon class="text-base">badge</mat-icon>
+            <span>{{ customer.subscriptionNumber }}</span>
+          </div>
+        </div>
+        <mat-chip [color]="getStatusColor(getCustomerStatus(customer))" selected>
+          {{ getCustomerStatus(customer) }}
+        </mat-chip>
+      </div>
+
+      <div class="space-y-2 mb-4 text-sm">
+        <div class="flex items-center gap-2 text-muted" *ngIf="customer.zone">
+          <mat-icon class="text-base">location_on</mat-icon>
+          <span>{{ customer.zone }}</span>
+        </div>
+        <div class="flex items-center gap-2 text-muted" *ngIf="customer.address">
+          <mat-icon class="text-base">home</mat-icon>
+          <span class="line-clamp-1">{{ customer.address }}</span>
+        </div>
+        <div class="flex items-center gap-2 text-muted" *ngIf="customer.subscriptionAmps">
+          <mat-icon class="text-base">bolt</mat-icon>
+          <span>{{ customer.subscriptionAmps }}A · {{ customer.billingMode || 'METERED' }}</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-4 border-t border-white/10">
+        <button mat-stroked-button color="primary" (click)="openDialog(customer)" class="flex-1">
+          <mat-icon>edit</mat-icon>
+          <span class="ml-1">{{ 'common.actions.edit' | t }}</span>
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>receipt</mat-icon>
+            <span>View Bills</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>history</mat-icon>
+            <span>View History</span>
+          </button>
+        </mat-menu>
+      </div>
+    </article>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="(customers$ | async)?.length === 0" class="rounded-soft border border-white/10 bg-surface/90 px-8 py-12 text-center">
+    <mat-icon class="text-6xl text-muted mb-4">people</mat-icon>
+    <h3 class="text-lg font-semibold text-text mb-2">No customers yet</h3>
+    <p class="text-sm text-muted mb-6">Add your first customer to get started</p>
+    <button mat-raised-button color="primary" (click)="openDialog(null)">
+      <mat-icon>add</mat-icon>
+      <span class="ml-2">{{ 'owner.customers.add' | t }}</span>
+    </button>
+  </div>
+</section>
