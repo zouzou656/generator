@@ -55,9 +55,9 @@
               <mat-chip color="warn" selected>{{ bill.status }}</mat-chip>
             </div>
             <dl class="mt-3 grid gap-2 text-sm text-muted md:grid-cols-2">
-              <div><dt class="font-semibold text-text">Period</dt><dd>{{ bill.period }}</dd></div>
+              <div><dt class="font-semibold text-text">Period</dt><dd>{{ formatPeriod(bill.periodYear, bill.periodMonth) || bill.period }}</dd></div>
               <div><dt class="font-semibold text-text">{{ 'portal.checkBill.bill.due' | t }}</dt><dd>{{ formatDate(bill.dueDate) }}</dd></div>
-              <div><dt class="font-semibold text-text">USD</dt><dd>{{ formatMoney(bill.amountUSD, 'USD') }}</dd></div>
+              <div><dt class="font-semibold text-text">USD</dt><dd>{{ formatMoney(bill.amountUSD ?? bill.totalAmount, 'USD') }}</dd></div>
               <div><dt class="font-semibold text-text">LBP</dt><dd>{{ formatMoney(bill.amountLBP, 'LBP') }}</dd></div>
             </dl>
             <button mat-stroked-button color="primary" class="mt-4" [matTooltip]="'app.comingSoon' | t" disabled>{{ 'portal.checkBill.bill.pay' | t }}</button>
@@ -72,7 +72,7 @@
               <mat-chip color="primary" selected>{{ bill.status }}</mat-chip>
             </div>
             <dl class="mt-3 grid gap-2 text-sm text-muted md:grid-cols-2">
-              <div><dt class="font-semibold text-text">Period</dt><dd>{{ bill.period }}</dd></div>
+              <div><dt class="font-semibold text-text">Period</dt><dd>{{ formatPeriod(bill.periodYear, bill.periodMonth) || bill.period }}</dd></div>
               <div><dt class="font-semibold text-text">Paid</dt><dd>{{ formatDate(bill.issuedAt ?? bill.billDate) }}</dd></div>
               <div><dt class="font-semibold text-text">USD</dt><dd>{{ formatMoney(bill.amountUSD ?? bill.totalAmount, 'USD') }}</dd></div>
               <div><dt class="font-semibold text-text">LBP</dt><dd>{{ formatMoney(bill.amountLBP, 'LBP') }}</dd></div>

@@ -50,21 +50,56 @@ export class AuthService {
     }
     try {
       const parsed = JSON.parse(stored) as AuthSession;
-      if (parsed.exp && parsed.exp > Date.now()) {
+      // If token exists, restore the session even if exp is not set or expired
+      // The backend will validate the token and reject if truly invalid
+      if (parsed.token) {
+        // Only check expiration if exp is set and valid
+        if (parsed.exp && parsed.exp > 0) {
+          if (parsed.exp <= Date.now()) {
+            console.warn('[AuthService] Session expired, clearing');
+            localStorage.removeItem(SESSION_KEY);
+            return null;
+          }
+        }
+        console.log('[AuthService] Restored session from localStorage', {
+          hasToken: !!parsed.token,
+          tokenPreview: parsed.token ? `${parsed.token.substring(0, 20)}...` : 'none',
+          role: parsed.role
+        });
         return parsed;
       }
       localStorage.removeItem(SESSION_KEY);
       return null;
     } catch (error) {
-      localStorage.removeItem(SESSION_KEY);
+      console.error('[AuthService] Failed to restore session:', error);
       localStorage.removeItem(SESSION_KEY);
       return null;
     }
   }
 
   async login(payload: LoginPayload): Promise<void> {
-    const { session } = await this.api.login(payload);
-    this.sessionState.set(session);
+    try {
+      console.log('[AuthService] Login called with payload:', { email: payload.email });
+      const { session } = await this.api.login(payload);
+      console.log('[AuthService] Login successful, received session:', { 
+        hasSession: !!session, 
+        hasToken: !!session.token,
+        tokenLength: session.token?.length,
+        role: session.role,
+        userId: session.userId
+      });
+      
+      if (!session.token) {
+        console.error('[AuthService] WARNING: Session has no token!', session);
+        throw new Error('Login failed: No token received');
+      }
+      
+      this.sessionState.set(session);
+      console.log('[AuthService] Session state updated, current session:', this.sessionState());
+    } catch (error) {
+      console.error('[AuthService] Login failed:', error);
+      throw error; // Re-throw so component can handle it
+    }
   }
 
   async logout(redirect: string = '/auth/login'): Promise<void> {

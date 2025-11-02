@@ -13,12 +13,20 @@ export class UsersEffects {
   load$ = createEffect(() =>
     this.actions$.pipe(
       ofType(UsersActions.loadUsers),
-      exhaustMap(() =>
-        from(this.api.getUsers()).pipe(
-          map((users) => UsersActions.loadUsersSuccess({ users })),
-          catchError((error) => of(UsersActions.loadUsersFailure({ error })))
-        )
-      )
+      exhaustMap(() => {
+        console.log('[UsersEffects] loadUsers action dispatched');
+        return from(this.api.getUsers()).pipe(
+          map((users) => {
+            console.log('[UsersEffects] getUsers returned:', users);
+            console.log('[UsersEffects] Dispatching loadUsersSuccess with', users?.length, 'users');
+            return UsersActions.loadUsersSuccess({ users });
+          }),
+          catchError((error) => {
+            console.error('[UsersEffects] getUsers failed:', error);
+            return of(UsersActions.loadUsersFailure({ error }));
+          })
+        );
+      })
     )
   );
 }

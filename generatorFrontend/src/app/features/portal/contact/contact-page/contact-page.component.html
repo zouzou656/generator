@@ -9,45 +9,78 @@
     <div class="card-form">
       <h2 class="text-xl font-semibold text-text mb-6">Send us a message</h2>
       <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
-        <mat-form-field appearance="outline" class="form-field-full">
-          <mat-label>{{ 'portal.contact.fields.name' | t }}</mat-label>
-          <input matInput formControlName="name" required />
-          <mat-icon matPrefix>person</mat-icon>
-          <mat-error *ngIf="form.controls.name.hasError('required')">
+        <!-- Name Input -->
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper" [class.error]="form.controls.name.touched && form.controls.name.invalid">
+            <div class="custom-input-label">
+              <span class="label-text">{{ 'portal.contact.fields.name' | t }}<span class="required-asterisk">*</span></span>
+            </div>
+            <input 
+              type="text" 
+              class="custom-input" 
+              formControlName="name" 
+            />
+          </div>
+          <div class="custom-error" *ngIf="form.controls.name.touched && form.controls.name.hasError('required')">
             {{ 'common.forms.required' | t }}
-          </mat-error>
-        </mat-form-field>
-
-        <div class="form-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'portal.contact.fields.email' | t }}</mat-label>
-            <input matInput formControlName="email" required type="email" />
-            <mat-icon matPrefix>email</mat-icon>
-            <mat-error *ngIf="form.controls.email.hasError('required')">
-              {{ 'common.forms.required' | t }}
-            </mat-error>
-            <mat-error *ngIf="form.controls.email.hasError('email')">
-              {{ 'common.forms.invalidEmail' | t }}
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>{{ 'portal.contact.fields.phone' | t }}</mat-label>
-            <input matInput formControlName="phone" required />
-            <mat-icon matPrefix>phone</mat-icon>
-            <mat-error *ngIf="form.controls.phone.hasError('required')">
-              {{ 'common.forms.required' | t }}
-            </mat-error>
-          </mat-form-field>
+          </div>
         </div>
 
-        <mat-form-field appearance="outline" class="form-field-full">
-          <mat-label>{{ 'portal.contact.fields.message' | t }}</mat-label>
-          <textarea matInput rows="5" formControlName="message" required></textarea>
-          <mat-error *ngIf="form.controls.message.hasError('required')">
+        <!-- Email & Phone Grid -->
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="custom-input-container">
+            <div class="custom-input-wrapper" [class.error]="form.controls.email.touched && form.controls.email.invalid">
+              <div class="custom-input-label">
+                <span class="label-text">{{ 'portal.contact.fields.email' | t }}<span class="required-asterisk">*</span></span>
+              </div>
+              <input 
+                type="email" 
+                class="custom-input" 
+                formControlName="email" 
+              />
+            </div>
+            <div class="custom-error" *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">
+              {{ 'common.forms.required' | t }}
+            </div>
+            <div class="custom-error" *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">
+              {{ 'common.forms.invalidEmail' | t }}
+            </div>
+          </div>
+
+          <div class="custom-input-container">
+            <div class="custom-input-wrapper" [class.error]="form.controls.phone.touched && form.controls.phone.invalid">
+              <div class="custom-input-label">
+                <span class="label-text">{{ 'portal.contact.fields.phone' | t }}<span class="required-asterisk">*</span></span>
+              </div>
+              <input 
+                type="tel" 
+                class="custom-input" 
+                formControlName="phone" 
+              />
+            </div>
+            <div class="custom-error" *ngIf="form.controls.phone.touched && form.controls.phone.hasError('required')">
+              {{ 'common.forms.required' | t }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Textarea -->
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper" [class.error]="form.controls.message.touched && form.controls.message.invalid">
+            <div class="custom-input-label">
+              <span class="label-text">{{ 'portal.contact.fields.message' | t }}<span class="required-asterisk">*</span></span>
+            </div>
+            <textarea 
+              class="custom-input" 
+              rows="5"
+              formControlName="message"
+              style="resize: vertical; min-height: 120px;"
+            ></textarea>
+          </div>
+          <div class="custom-error" *ngIf="form.controls.message.touched && form.controls.message.hasError('required')">
             {{ 'common.forms.required' | t }}
-          </mat-error>
-        </mat-form-field>
+          </div>
+        </div>
 
         <div class="form-actions">
           <button 

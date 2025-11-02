@@ -1,0 +1,18 @@
+namespace BAL;
+
+public enum BusinessErrorCode
+{
+    INVALID_CREDENTIALS,
+    USER_NOT_FOUND,
+    REQUEST_NOT_FOUND,
+    CUSTOMER_NOT_FOUND,
+    BILL_NOT_FOUND,
+    DUPLICATE_SUBSCRIPTION,
+    INVALID_IMPORT_DATA
+}
+
+public enum UserRole
+{
+    ADMIN,
+    GENERATOR_OWNER
+}

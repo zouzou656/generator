@@ -1,85 +1,148 @@
 <section class="space-y-6">
-  <div class="flex flex-wrap items-center justify-between gap-3">
+  <div class="flex items-center justify-between">
     <div>
       <h1 class="text-3xl font-semibold text-text">{{ 'owner.sms.campaigns.title' | t }}</h1>
       <p class="text-sm text-muted mt-1">Create and manage SMS campaigns for your customers</p>
     </div>
-    <button mat-raised-button color="primary" (click)="openCreateDialog()">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="openCreateDialog()"
+      *ngIf="!showForm"
+    >
       <mat-icon>add</mat-icon>
       <span class="ml-2">{{ 'owner.sms.campaigns.create' | t }}</span>
+    </button>
+    <button 
+      mat-stroked-button 
+      (click)="cancel()"
+      *ngIf="showForm"
+    >
+      Cancel
     </button>
   </div>
 
   <!-- Campaign Form -->
   <div class="card-form" *ngIf="showForm">
-    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
-      <div class="form-section">
-        <div class="form-section-title">Campaign Details</div>
-        
-        <mat-form-field appearance="outline" class="form-field-full">
-          <mat-label>Campaign Title</mat-label>
-          <input matInput formControlName="title" placeholder="e.g., March Payment Reminders" required />
-          <mat-icon matPrefix>campaign</mat-icon>
-          <mat-error *ngIf="form.controls.title.hasError('required')">
-            Campaign title is required
-          </mat-error>
-        </mat-form-field>
-
-        <div class="form-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Message Template</mat-label>
-            <mat-select formControlName="templateId" required>
-              <mat-option *ngFor="let template of templates" [value]="template.id">
-                {{ template.name }}
-              </mat-option>
-            </mat-select>
-            <mat-icon matPrefix>message</mat-icon>
-            <mat-hint>Select a template or create a new one</mat-hint>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Related Period Year</mat-label>
-            <input matInput type="number" formControlName="relatedPeriodYear" [min]="2020" [max]="2030" />
-            <mat-icon matPrefix>calendar_today</mat-icon>
-            <mat-hint>Optional: Link to billing period</mat-hint>
-          </mat-form-field>
-        </div>
-
-        <div class="form-grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Related Period Month</mat-label>
-            <mat-select formControlName="relatedPeriodMonth">
-              <mat-option value="">None</mat-option>
-              <mat-option *ngFor="let month of months" [value]="month.value">
-                {{ month.label }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Schedule Date & Time</mat-label>
-            <input matInput type="datetime-local" formControlName="scheduledAt" />
-            <mat-icon matPrefix>schedule</mat-icon>
-            <mat-hint>Leave empty to send immediately</mat-hint>
-          </mat-form-field>
-        </div>
+    <div class="form-section">
+      <div class="form-section-title">
+        {{ form.value.id ? 'Edit Campaign' : 'Create New Campaign' }}
       </div>
+      
+      <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper" [class.error]="form.controls.title.touched && form.controls.title.invalid">
+            <div class="custom-input-label">
+              <span class="label-text">Campaign Title<span class="required-asterisk">*</span></span>
+            </div>
+            <input 
+              type="text" 
+              class="custom-input" 
+              formControlName="title" 
+              placeholder="e.g., March Payment Reminders"
+            />
+          </div>
+          <div class="custom-error" *ngIf="form.controls.title.touched && form.controls.title.hasError('required')">
+            Campaign title is required
+          </div>
+        </div>
 
-      <!-- Target Customers -->
-      <div class="form-section">
-        <div class="form-section-title">Target Customers</div>
-        
-        <mat-form-field appearance="outline" class="form-field-full">
-          <mat-label>Target Segments</mat-label>
-          <mat-select formControlName="targetSegments" multiple>
-            <mat-option value="ALL_CUSTOMERS">All Active Customers</mat-option>
-            <mat-option value="PENDING_BILLS">Customers with Pending Bills</mat-option>
-            <mat-option value="OVERDUE_BILLS">Customers with Overdue Bills</mat-option>
-            <mat-option value="PAID_BILLS">Customers with Paid Bills (This Period)</mat-option>
-          </mat-select>
-          <mat-icon matPrefix>group</mat-icon>
-          <mat-hint>Select customer segments to target</mat-hint>
-        </mat-form-field>
+        <div class="form-grid">
+          <div class="custom-input-container">
+            <div class="custom-select-wrapper" [class.error]="form.controls.templateId.touched && form.controls.templateId.invalid">
+              <div class="custom-input-label">
+                <span class="label-text">Message Template<span class="required-asterisk">*</span></span>
+              </div>
+              <select 
+                class="custom-input" 
+                formControlName="templateId"
+                required
+              >
+                <option value="">Select a template...</option>
+                <option *ngFor="let template of templates" [value]="template.id">
+                  {{ template.name }}
+                </option>
+                <option *ngIf="templates.length === 0" value="" disabled>
+                  No templates available. Create one first.
+                </option>
+              </select>
+            </div>
+            <div class="custom-error" *ngIf="form.controls.templateId.touched && form.controls.templateId.hasError('required')">
+              Template selection is required
+            </div>
+            <div class="text-xs text-muted mt-1 pl-1">Select a template or create a new one</div>
+          </div>
+
+          <div class="custom-input-container">
+            <div class="custom-input-wrapper">
+              <div class="custom-input-label">
+                <span class="label-text">Related Period Year</span>
+              </div>
+              <input 
+                type="number" 
+                class="custom-input" 
+                formControlName="relatedPeriodYear" 
+                [min]="2020" 
+                [max]="2030"
+              />
+            </div>
+            <div class="text-xs text-muted mt-1 pl-1">Optional: Link to billing period</div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="custom-input-container">
+            <div class="custom-select-wrapper">
+              <div class="custom-input-label">
+                <span class="label-text">Related Period Month</span>
+              </div>
+              <select class="custom-input" formControlName="relatedPeriodMonth">
+                <option value="">None</option>
+                <option *ngFor="let month of months" [value]="month.value">
+                  {{ month.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="custom-input-container">
+            <div class="custom-input-wrapper">
+              <div class="custom-input-label">
+                <span class="label-text">Schedule Date & Time</span>
+              </div>
+              <input 
+                type="datetime-local" 
+                class="custom-input" 
+                formControlName="scheduledAt" 
+              />
+            </div>
+            <div class="text-xs text-muted mt-1 pl-1">Leave empty to send immediately</div>
+          </div>
+        </div>
+
+        <!-- Target Customers -->
+        <div class="custom-input-container">
+          <div class="custom-select-wrapper" [class.error]="form.controls.targetSegments.touched && form.controls.targetSegments.invalid">
+            <div class="custom-input-label">
+              <span class="label-text">Target Segments<span class="required-asterisk">*</span></span>
+            </div>
+            <select 
+              class="custom-input" 
+              formControlName="targetSegments"
+              required
+            >
+              <option value="">Select target segment...</option>
+              <option value="ALL_CUSTOMERS">All Active Customers</option>
+              <option value="PENDING_BILLS">Customers with Pending Bills</option>
+              <option value="OVERDUE_BILLS">Customers with Overdue Bills</option>
+              <option value="PAID_BILLS">Customers with Paid Bills (This Period)</option>
+            </select>
+          </div>
+          <div class="custom-error" *ngIf="form.controls.targetSegments.touched && form.controls.targetSegments.hasError('required')">
+            Target segments selection is required
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Select customer segments to target</div>
+        </div>
 
         <!-- Preview Recipients Count -->
         <div class="rounded-soft border border-primary/20 bg-primary/5 p-4" *ngIf="estimatedRecipients() > 0">
@@ -91,40 +154,43 @@
             <div class="text-2xl font-bold text-primary">{{ estimatedRecipients() }}</div>
           </div>
         </div>
-      </div>
 
-      <!-- Message Preview -->
-      <div class="form-section" *ngIf="selectedTemplate">
-        <div class="form-section-title">Message Preview</div>
-        <div class="bg-surface/50 p-4 rounded-soft border border-white/10">
-          <div class="text-sm text-muted mb-2">Template: {{ selectedTemplate.name }}</div>
-          <div class="whitespace-pre-wrap text-sm">{{ getPreviewMessage() }}</div>
-          <div class="text-xs text-muted mt-2">
-            {{ selectedTemplate.body.length }} characters · 
-            {{ Math.ceil(selectedTemplate.body.length / 160) }} SMS per customer
+        <!-- Message Preview -->
+        <div *ngIf="selectedTemplate">
+          <div class="rounded-soft border border-white/10 bg-surface/50 p-4">
+            <div class="text-xs font-semibold text-muted mb-2">Preview</div>
+            <div class="bg-surface p-3 rounded-soft border border-white/10 min-h-[60px] text-sm">
+              <div class="whitespace-pre-wrap">{{ getPreviewMessage() }}</div>
+            </div>
+            <div class="text-xs text-muted mt-2">
+              Template: {{ selectedTemplate.name }} · 
+              {{ selectedTemplate.body.length }} characters · 
+              {{ Math.ceil(selectedTemplate.body.length / 160) }} SMS per customer
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="form-actions">
-        <button mat-stroked-button type="button" (click)="cancel()">
-          Cancel
-        </button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
-          <mat-spinner *ngIf="loading" diameter="20" class="inline-block mr-2"></mat-spinner>
-          <mat-icon *ngIf="!loading">send</mat-icon>
-          <span class="ml-2">{{ form.value.scheduledAt ? 'Schedule Campaign' : 'Send Now' }}</span>
-        </button>
-      </div>
-    </form>
+        <div class="form-actions">
+          <button mat-stroked-button type="button" (click)="cancel()">
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+            <mat-spinner *ngIf="loading" diameter="20" class="inline-block mr-2"></mat-spinner>
+            <mat-icon *ngIf="!loading">{{ form.value.id ? 'save' : 'send' }}</mat-icon>
+            <span class="ml-2">{{ form.value.id ? 'Update Campaign' : (form.value.scheduledAt ? 'Schedule Campaign' : 'Send Now') }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
-  <!-- Campaigns List -->
-  <div class="grid gap-4 md:grid-cols-2" *ngIf="campaigns$ | async as campaigns">
-    <article 
-      *ngFor="let campaign of campaigns" 
-      class="rounded-soft border border-white/10 bg-surface/95 p-6 shadow-soft hover:shadow-lg hover:border-primary/30 transition-all"
-    >
+  <!-- Campaigns Grid -->
+  <ng-container *ngIf="campaigns$ | async as campaigns">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3" *ngIf="campaigns.length > 0; else empty">
+      <article 
+        *ngFor="let campaign of campaigns" 
+        class="rounded-soft border border-white/10 bg-surface/95 p-6 shadow-soft hover:shadow-lg hover:border-primary/30 transition-all"
+      >
       <div class="flex items-start justify-between mb-4">
         <div class="flex-1">
           <h2 class="text-lg font-semibold text-text mb-1">{{ campaign.title }}</h2>
@@ -135,9 +201,28 @@
             </span>
           </p>
         </div>
-        <mat-chip [color]="getStatusColor(campaign.status)" selected>
-          {{ campaign.status }}
-        </mat-chip>
+        <div class="flex items-center gap-2">
+          <mat-chip [color]="getStatusColor(campaign.status)" selected class="text-xs">
+            {{ campaign.status }}
+          </mat-chip>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="view(campaign.id)">
+              <mat-icon>visibility</mat-icon>
+              <span>View Details</span>
+            </button>
+            <button 
+              mat-menu-item 
+              (click)="send(campaign.id)" 
+              *ngIf="campaign.status !== 'SENT'"
+            >
+              <mat-icon>send</mat-icon>
+              <span>Send</span>
+            </button>
+          </mat-menu>
+        </div>
       </div>
 
       <!-- Metrics -->
@@ -156,32 +241,27 @@
         </div>
       </div>
 
-      <div class="flex gap-2 pt-4 border-t border-white/10">
-        <button mat-stroked-button color="primary" (click)="view(campaign.id)" class="flex-1">
-          <mat-icon>visibility</mat-icon>
-          <span class="ml-1">View Details</span>
-        </button>
-        <button 
-          mat-raised-button 
-          color="accent" 
-          (click)="send(campaign.id)" 
-          *ngIf="campaign.status !== 'SENT'"
-        >
-          <mat-icon>send</mat-icon>
-          <span class="ml-1">Send</span>
-        </button>
+      <div class="flex items-center gap-2 text-xs text-muted pt-4 border-t border-white/10">
+        <mat-icon class="text-xs">people</mat-icon>
+        <span>{{ ((campaign.metrics?.delivered || 0) + (campaign.metrics?.pending || 0) + (campaign.metrics?.failed || 0)) }} recipients</span>
+        <span class="mx-1">•</span>
+        <mat-icon class="text-xs">schedule</mat-icon>
+        <span *ngIf="campaign.scheduledAt">{{ campaign.scheduledAt | date: 'short' }}</span>
+        <span *ngIf="!campaign.scheduledAt">Send immediately</span>
       </div>
     </article>
-  </div>
+    </div>
+  </ng-container>
 
-  <!-- Empty State -->
-  <div *ngIf="(campaigns$ | async)?.length === 0" class="rounded-soft border border-white/10 bg-surface/90 px-8 py-12 text-center">
-    <mat-icon class="text-6xl text-muted mb-4">campaign</mat-icon>
-    <h3 class="text-lg font-semibold text-text mb-2">No campaigns yet</h3>
-    <p class="text-sm text-muted mb-6">Create your first SMS campaign to reach your customers</p>
-    <button mat-raised-button color="primary" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon>
-      <span class="ml-2">Create Campaign</span>
-    </button>
-  </div>
+  <ng-template #empty>
+    <div class="rounded-soft border border-white/10 bg-surface/90 px-8 py-12 text-center">
+      <mat-icon class="text-6xl text-muted mb-4">campaign</mat-icon>
+      <h3 class="text-lg font-semibold text-text mb-2">No campaigns yet</h3>
+      <p class="text-sm text-muted mb-6">Create your first SMS campaign to reach your customers</p>
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        <span class="ml-2">Create Campaign</span>
+      </button>
+    </div>
+  </ng-template>
 </section>

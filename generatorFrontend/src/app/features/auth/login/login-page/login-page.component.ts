@@ -35,9 +35,8 @@ export class LoginPageComponent {
   private readonly snackBar = inject(MatSnackBar);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['maya.saab@generator.example', [Validators.required, Validators.email]],
-    password: ['password123', [Validators.required, Validators.minLength(6)]],
-    role: ['ADMIN', Validators.required],
+    email: ['admin@generator.com', [Validators.required, Validators.email]],
+    password: ['admin', [Validators.required, Validators.minLength(1)]],
     remember: [true]
   });
 
@@ -48,20 +47,60 @@ export class LoginPageComponent {
       this.form.markAllAsTouched();
       return;
     }
+    
     this.loading = true;
+    console.log('[Login] Submitting login form', {
+      email: this.form.value.email
+    });
+    
     try {
       const value = this.form.getRawValue();
-      const role = value.role as 'ADMIN' | 'GENERATOR_OWNER';
+      
+      console.log('[Login] Calling auth.login service');
       await this.auth.login({
         email: value.email,
-        password: value.password,
-        role
+        password: value.password
       });
-      const target = loginRedirectForRole(role);
+      
+      // Role is determined by the backend response
+      const session = this.auth.session();
+      if (!session) {
+        throw new Error('Login failed - no session created');
+      }
+      
+      console.log('[Login] Login successful, navigating to dashboard. Role:', session.role);
+      const target = loginRedirectForRole(session.role);
       await this.router.navigateByUrl(target);
-    } catch (error) {
-      this.snackBar.open('Invalid credentials. Try switching role for the demo.', 'Close', {
-        duration: 4000
+    } catch (error: any) {
+      console.error('[Login] Login error:', error);
+      
+      // Extract error message
+      let errorMessage = 'Invalid credentials. Please check your email and password.';
+      
+      if (error) {
+        if (typeof error === 'string') {
+          errorMessage = error;
+        } else if (error.message) {
+          errorMessage = error.message;
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+      }
+      
+      // Check for network errors
+      if (error?.status === 0 || error?.statusText === 'Unknown Error') {
+        errorMessage = 'Cannot connect to server. Please ensure the API is running on http://localhost:5076';
+      } else if (error?.status === 401) {
+        errorMessage = 'Invalid email or password.';
+      } else if (error?.status === 400) {
+        errorMessage = errorMessage || 'Invalid request. Please check your credentials.';
+      } else if (error?.status >= 500) {
+        errorMessage = 'Server error. Please try again later.';
+      }
+      
+      this.snackBar.open(errorMessage, 'Close', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
       });
     } finally {
       this.loading = false;

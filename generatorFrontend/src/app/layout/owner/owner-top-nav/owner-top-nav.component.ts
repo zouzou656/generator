@@ -27,6 +27,7 @@ export class OwnerTopNavComponent {
     { path: '/owner/dashboard', key: 'owner.nav.dashboard' },
     { path: '/owner/customers', key: 'owner.nav.customers', perms: ['CUSTOMER_WRITE'] },
     { path: '/owner/bills', key: 'owner.nav.bills', perms: ['BILL_WRITE'] },
+    { path: '/owner/sms/templates', key: 'owner.nav.smsTemplates', perms: ['TEMPLATE_WRITE'] },
     { path: '/owner/sms/campaigns', key: 'owner.nav.sms', perms: ['SMS_SEND'] },
     { path: '/owner/imports', key: 'owner.nav.imports', perms: ['BILL_IMPORT'] },
     { path: '/owner/reports', key: 'owner.nav.reports', perms: ['REPORT_VIEW'] }

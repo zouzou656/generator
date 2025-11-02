@@ -1,0 +1,221 @@
+<div class="p-6">
+  <h2 mat-dialog-title class="text-2xl font-semibold text-text mb-4">
+    {{ data.single ? 'Add Bill' : 'Add Multiple Bills' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="form" class="space-y-4">
+      <div formArrayName="bills" class="space-y-6">
+        <div 
+          *ngFor="let bill of bills.controls; let i = index" 
+          [formGroupName]="i"
+          class="rounded-soft border border-white/10 bg-surface/50 p-4"
+        >
+          <div class="flex items-center justify-between mb-4" *ngIf="!data.single">
+            <h3 class="text-lg font-semibold text-text">Bill {{ i + 1 }}</h3>
+            <button 
+              mat-icon-button 
+              type="button"
+              (click)="removeBill(i)"
+              *ngIf="bills.length > 1"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper" [class.error]="getBillGroup(i).controls['subscriptionNumber'].touched && getBillGroup(i).controls['subscriptionNumber'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Subscription Number<span class="required-asterisk">*</span></span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="subscriptionNumber" 
+                  placeholder="SUB1201"
+                />
+              </div>
+              <div class="custom-error" *ngIf="getBillGroup(i).controls['subscriptionNumber'].touched && getBillGroup(i).controls['subscriptionNumber'].hasError('required')">
+                Subscription number is required
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper" [class.error]="getBillGroup(i).controls['totalAmount'].touched && getBillGroup(i).controls['totalAmount'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Total Amount<span class="required-asterisk">*</span></span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="totalAmount" 
+                  placeholder="45.50"
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+              <div class="custom-error" *ngIf="getBillGroup(i).controls['totalAmount'].touched && getBillGroup(i).controls['totalAmount'].hasError('required')">
+                Total amount is required
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper" [class.error]="getBillGroup(i).controls['periodYear'].touched && getBillGroup(i).controls['periodYear'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Period Year<span class="required-asterisk">*</span></span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="periodYear" 
+                  [min]="2020"
+                  [max]="2030"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-select-wrapper" [class.error]="getBillGroup(i).controls['periodMonth'].touched && getBillGroup(i).controls['periodMonth'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Period Month<span class="required-asterisk">*</span></span>
+                </div>
+                <select class="custom-input" formControlName="periodMonth">
+                  <option *ngFor="let month of months" [value]="month.value">
+                    {{ month.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Previous KVA</span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="previousKva" 
+                  placeholder="100.00"
+                  step="0.01"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Current KVA</span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="currentKva" 
+                  placeholder="150.00"
+                  step="0.01"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Subscription Fee (Variable)</span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="subscriptionFeeVar" 
+                  placeholder="0.25"
+                  step="0.01"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Subscription Fee (Fixed)</span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="subscriptionFeeFixed" 
+                  placeholder="20.00"
+                  step="0.01"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Name on Bill</span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="nameOnBill" 
+                  placeholder="John Doe"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Due Date</span>
+                </div>
+                <input 
+                  type="date" 
+                  class="custom-input" 
+                  formControlName="dueDate"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container md:col-span-2">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Notes</span>
+                </div>
+                <textarea 
+                  class="custom-input" 
+                  formControlName="notes" 
+                  rows="2"
+                  placeholder="Additional notes..."
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        mat-stroked-button 
+        type="button"
+        (click)="addBill()"
+        *ngIf="!data.single"
+        class="w-full"
+      >
+        <mat-icon>add</mat-icon>
+        <span class="ml-2">Add Another Bill</span>
+      </button>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="flex justify-end gap-3 pt-6">
+    <button mat-stroked-button (click)="cancel()">Cancel</button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="submit()"
+      [disabled]="form.invalid"
+    >
+      <mat-icon>save</mat-icon>
+      <span class="ml-2">Add {{ bills.length }} Bill(s)</span>
+    </button>
+  </mat-dialog-actions>
+</div>
+

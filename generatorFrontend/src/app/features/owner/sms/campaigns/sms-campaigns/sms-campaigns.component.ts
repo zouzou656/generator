@@ -10,13 +10,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
+import { MatMenuModule } from '@angular/material/menu';
 import { SmsCampaignActions } from '../../../../../state/sms/sms-campaigns.actions';
 import { smsCampaignsFeature } from '../../../../../state/sms/sms-campaigns.reducer';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { selectOwnerCustomersForOwner } from '../../../../../state/owner-customers/owner-customers.selectors';
 import { OwnerCustomersActions } from '../../../../../state/owner-customers/owner-customers.actions';
 import { API_CLIENT, ApiClient, SmsTemplateRecord } from '../../../../../core/api/api-client';
+import { TranslatePipe } from '../../../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-sms-campaigns',
@@ -29,6 +30,7 @@ import { API_CLIENT, ApiClient, SmsTemplateRecord } from '../../../../../core/ap
     MatButtonModule, 
     MatChipsModule,
     MatIconModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     TranslatePipe
   ],
@@ -68,21 +70,35 @@ export class SmsCampaignsComponent {
     title: ['', Validators.required],
     templateId: ['', Validators.required],
     scheduledAt: [''],
-    targetSegments: [['ALL_CUSTOMERS'], Validators.required],
+    targetSegments: ['ALL_CUSTOMERS', Validators.required],
     relatedPeriodYear: [new Date().getFullYear()],
     relatedPeriodMonth: [new Date().getMonth() + 1]
   });
 
   constructor() {
-    const ownerId = this.auth.getOwnerIdOrThrow();
-    this.store.dispatch(SmsCampaignActions.loadCampaigns({ ownerId }));
-    this.store.dispatch(OwnerCustomersActions.loadOwnerCustomers({ ownerId }));
-    this.api.getSmsTemplates(ownerId).then((templates) => {
-      this.templates = templates;
-      if (!this.form.value.templateId && templates.length) {
-        this.form.patchValue({ templateId: templates[0].id });
-      }
-    });
+    try {
+      const ownerId = this.auth.getOwnerIdOrThrow();
+      this.store.dispatch(SmsCampaignActions.loadCampaigns({ ownerId }));
+      this.store.dispatch(OwnerCustomersActions.loadOwnerCustomers({ ownerId }));
+      this.api.getSmsTemplates(ownerId).then((templates) => {
+        console.log('[SMS Campaigns] Templates loaded:', templates);
+        this.templates = templates || [];
+        console.log('[SMS Campaigns] Templates array:', this.templates);
+        console.log('[SMS Campaigns] Templates count:', this.templates.length);
+        
+        // Set default template if none selected and templates exist
+        if (!this.form.value.templateId && this.templates.length > 0) {
+          this.form.patchValue({ templateId: this.templates[0].id });
+          console.log('[SMS Campaigns] Set default template:', this.templates[0].id);
+        }
+      }).catch((error) => {
+        console.error('[SMS Campaigns] Failed to load templates:', error);
+        this.templates = [];
+      });
+    } catch (error: any) {
+      console.error('[SMS Campaigns] Failed to initialize:', error);
+      this.templates = [];
+    }
   }
 
   get selectedTemplate() {
@@ -128,9 +144,9 @@ export class SmsCampaignsComponent {
   openCreateDialog(): void {
     this.form.reset({
       title: '',
-      templateId: '',
+      templateId: this.templates.length > 0 ? this.templates[0].id : '',
       scheduledAt: '',
-      targetSegments: ['ALL_CUSTOMERS'],
+      targetSegments: 'ALL_CUSTOMERS',
       relatedPeriodYear: new Date().getFullYear(),
       relatedPeriodMonth: new Date().getMonth() + 1
     });
@@ -163,7 +179,11 @@ export class SmsCampaignsComponent {
         messageBody,
         templateId: raw.templateId!,
         scheduledAt: raw.scheduledAt || undefined,
-        targetSegments: raw.targetSegments!,
+        targetSegments: Array.isArray(raw.targetSegments) 
+          ? (raw.targetSegments as string[])
+          : typeof raw.targetSegments === 'string' 
+            ? [raw.targetSegments] 
+            : ['ALL_CUSTOMERS'],
         relatedPeriodYear: raw.relatedPeriodYear || undefined,
         relatedPeriodMonth: raw.relatedPeriodMonth || undefined
       }

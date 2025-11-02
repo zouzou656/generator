@@ -23,7 +23,7 @@ export type { DashboardDataset, SmsTemplateRecord };
 export interface LoginPayload {
   email: string;
   password: string;
-  role: UserRole;
+  // Role is now auto-detected from the backend based on the user's account
 }
 
 export interface LoginResponse {

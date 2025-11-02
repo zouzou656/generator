@@ -1,26 +1,46 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="grid gap-4">
-  <mat-form-field appearance="outline">
-    <mat-label>{{ 'auth.email' | t }}</mat-label>
-    <input matInput formControlName="email" type="email" required />
-    <mat-error *ngIf="form.controls.email.hasError('required')">{{ 'common.forms.required' | t }}</mat-error>
-    <mat-error *ngIf="form.controls.email.hasError('email')">{{ 'common.forms.invalidEmail' | t }}</mat-error>
-  </mat-form-field>
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+  <!-- Email Input -->
+  <div class="custom-input-container">
+    <div class="custom-input-wrapper" [class.error]="form.controls.email.touched && form.controls.email.invalid">
+      <div class="custom-input-label">
+        <span class="label-text">{{ 'auth.email' | t }}<span class="required-asterisk">*</span></span>
+        <span class="label-value">adminexample.com</span>
+      </div>
+      <input 
+        type="email" 
+        class="custom-input" 
+        formControlName="email" 
+      />
+    </div>
+    <div class="custom-error" *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">
+      {{ 'common.forms.required' | t }}
+    </div>
+    <div class="custom-error" *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">
+      {{ 'common.forms.invalidEmail' | t }}
+    </div>
+  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>{{ 'auth.password' | t }}</mat-label>
-    <input matInput formControlName="password" type="password" required />
-    <mat-error *ngIf="form.controls.password.hasError('required')">{{ 'common.forms.required' | t }}</mat-error>
-  </mat-form-field>
+  <!-- Password Input -->
+  <div class="custom-input-container">
+    <div class="custom-input-wrapper" [class.error]="form.controls.password.touched && form.controls.password.invalid">
+      <div class="custom-input-label">
+        <span class="label-text">{{ 'auth.password' | t }}<span class="required-asterisk">*</span></span>
+        <span class="label-value">••••••••</span>
+      </div>
+      <input 
+        type="password" 
+        class="custom-input" 
+        formControlName="password" 
+      />
+    </div>
+    <div class="custom-error" *ngIf="form.controls.password.touched && form.controls.password.hasError('required')">
+      {{ 'common.forms.required' | t }}
+    </div>
+  </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>{{ 'auth.role' | t }}</mat-label>
-    <mat-select formControlName="role">
-      <mat-option value="ADMIN">{{ 'auth.roleAdmin' | t }}</mat-option>
-      <mat-option value="GENERATOR_OWNER">{{ 'auth.roleOwner' | t }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-
+  <!-- Remember Toggle -->
   <mat-slide-toggle formControlName="remember">{{ 'auth.remember' | t }}</mat-slide-toggle>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="loading">{{ 'auth.submit' | t }}</button>
+  <!-- Submit Button -->
+  <button mat-raised-button color="primary" type="submit" [disabled]="loading" class="w-full">{{ 'auth.submit' | t }}</button>
 </form>

@@ -58,8 +58,12 @@
       <table class="w-full text-sm">
         <thead>
           <tr class="border-b border-white/10">
+            <th class="text-left py-3 px-4 font-semibold text-text">Bill ID</th>
             <th class="text-left py-3 px-4 font-semibold text-text">Customer</th>
+            <th class="text-left py-3 px-4 font-semibold text-text">Bill Date</th>
             <th class="text-left py-3 px-4 font-semibold text-text">Period</th>
+            <th class="text-right py-3 px-4 font-semibold text-text">KVA Reading</th>
+            <th class="text-right py-3 px-4 font-semibold text-text">Fees</th>
             <th class="text-right py-3 px-4 font-semibold text-text">Amount</th>
             <th class="text-left py-3 px-4 font-semibold text-text">Due Date</th>
             <th class="text-left py-3 px-4 font-semibold text-text">Status</th>
@@ -72,10 +76,38 @@
             class="border-b border-white/5 hover:bg-surface/50 transition-colors"
           >
             <td class="py-3 px-4">
+              <div class="text-xs font-mono text-muted">#{{ bill.id }}</div>
+            </td>
+            <td class="py-3 px-4">
               <div class="font-semibold text-text">{{ bill.nameOnBill || 'N/A' }}</div>
+              <div class="text-xs text-muted" *ngIf="bill.subscriptionAmps">
+                {{ bill.subscriptionAmps }}A
+              </div>
+            </td>
+            <td class="py-3 px-4 text-muted">
+              {{ bill.billDate ? formatDate(bill.billDate) : '-' }}
             </td>
             <td class="py-3 px-4">
               {{ formatPeriod(bill.periodYear, bill.periodMonth) || bill.period || '-' }}
+            </td>
+            <td class="py-3 px-4 text-right text-xs">
+              <div *ngIf="bill.previousKva && bill.currentKva" class="space-y-0.5">
+                <div class="text-muted">Prev: {{ bill.previousKva | number:'1.2-2' }}</div>
+                <div class="text-text">Curr: {{ bill.currentKva | number:'1.2-2' }}</div>
+                <div class="text-primary font-semibold">
+                  Diff: {{ (bill.currentKva - bill.previousKva) | number:'1.2-2' }}
+                </div>
+              </div>
+              <span *ngIf="!bill.previousKva || !bill.currentKva" class="text-muted">-</span>
+            </td>
+            <td class="py-3 px-4 text-right text-xs">
+              <div *ngIf="bill.subscriptionFeeVar" class="text-muted">
+                Var: {{ formatUsd(bill.subscriptionFeeVar) }}
+              </div>
+              <div *ngIf="bill.subscriptionFeeFixed" class="text-muted">
+                Fixed: {{ formatUsd(bill.subscriptionFeeFixed) }}
+              </div>
+              <span *ngIf="!bill.subscriptionFeeVar && !bill.subscriptionFeeFixed" class="text-muted">-</span>
             </td>
             <td class="py-3 px-4 text-right">
               <div class="font-semibold text-text">

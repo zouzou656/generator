@@ -7,11 +7,20 @@ import { requestsFeature } from '../../../../state/requests/requests.reducer';
 import { RequestsActions } from '../../../../state/requests/requests.actions';
 import { map } from 'rxjs/operators';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { RequestRecord } from '../../../../core/models/domain.models';
 
 @Component({
   selector: 'app-request-details',
-  imports: [CommonModule, RouterLink, TranslatePipe, MatChipsModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    TranslatePipe,
+    MatChipsModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './request-details.component.html',
   styleUrl: './request-details.component.scss'
 })
@@ -26,5 +35,19 @@ export class RequestDetailsComponent {
 
   constructor() {
     this.store.dispatch(RequestsActions.loadRequests());
+  }
+
+  approve(request: RequestRecord) {
+    this.store.dispatch(RequestsActions.updateRequest({
+      id: request.id,
+      status: 'APPROVED'
+    }));
+  }
+
+  reject(request: RequestRecord) {
+    this.store.dispatch(RequestsActions.updateRequest({
+      id: request.id,
+      status: 'REJECTED'
+    }));
   }
 }

@@ -27,12 +27,20 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="form-field-full">
-        <mat-label>Name on Bill</mat-label>
-        <input matInput formControlName="nameOnBill" placeholder="Leave empty to use default" />
-        <mat-icon matPrefix>description</mat-icon>
-        <mat-hint>If empty, will use customer's default name on bill</mat-hint>
-      </mat-form-field>
+      <div class="custom-input-container">
+        <div class="custom-input-wrapper">
+          <div class="custom-input-label">
+            <span class="label-text">Name on Bill</span>
+          </div>
+          <input 
+            type="text" 
+            class="custom-input" 
+            formControlName="nameOnBill" 
+            placeholder="Leave empty to use default"
+          />
+        </div>
+        <div class="text-xs text-muted mt-1 pl-1">If empty, will use customer's default name on bill</div>
+      </div>
     </div>
 
     <!-- Billing Period -->
@@ -40,14 +48,23 @@
       <div class="form-section-title">Billing Period</div>
       
       <div class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Period Year</mat-label>
-          <input matInput type="number" formControlName="periodYear" [min]="2020" [max]="2030" required />
-          <mat-icon matPrefix>calendar_today</mat-icon>
-          <mat-error *ngIf="form.controls.periodYear.hasError('required')">
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper" [class.error]="form.controls.periodYear.touched && form.controls.periodYear.invalid">
+            <div class="custom-input-label">
+              <span class="label-text">Period Year<span class="required-asterisk">*</span></span>
+            </div>
+            <input 
+              type="number" 
+              class="custom-input" 
+              formControlName="periodYear" 
+              [min]="2020" 
+              [max]="2030"
+            />
+          </div>
+          <div class="custom-error" *ngIf="form.controls.periodYear.touched && form.controls.periodYear.hasError('required')">
             Year is required
-          </mat-error>
-        </mat-form-field>
+          </div>
+        </div>
 
         <mat-form-field appearance="outline">
           <mat-label>Period Month</mat-label>
@@ -64,17 +81,35 @@
       </div>
 
       <div class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Bill Date</mat-label>
-          <input matInput type="date" formControlName="billDate" [value]="today" required />
-          <mat-icon matPrefix>event</mat-icon>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper" [class.error]="form.controls.billDate.touched && form.controls.billDate.invalid">
+            <div class="custom-input-label">
+              <span class="label-text">Bill Date<span class="required-asterisk">*</span></span>
+            </div>
+            <input 
+              type="date" 
+              class="custom-input" 
+              formControlName="billDate" 
+              [value]="today"
+            />
+          </div>
+          <div class="custom-error" *ngIf="form.controls.billDate.touched && form.controls.billDate.hasError('required')">
+            Bill date is required
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Due Date</mat-label>
-          <input matInput type="date" formControlName="dueDate" />
-          <mat-icon matPrefix>event_available</mat-icon>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Due Date</span>
+            </div>
+            <input 
+              type="date" 
+              class="custom-input" 
+              formControlName="dueDate" 
+            />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -83,19 +118,35 @@
       <div class="form-section-title">Meter Readings (KVA)</div>
       
       <div class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Previous KVA</mat-label>
-          <input matInput type="number" step="0.01" formControlName="previousKva" />
-          <mat-icon matPrefix>speed</mat-icon>
-          <mat-hint>Previous meter reading</mat-hint>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Previous KVA</span>
+            </div>
+            <input 
+              type="number" 
+              step="0.01"
+              class="custom-input" 
+              formControlName="previousKva" 
+            />
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Previous meter reading</div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Current KVA</mat-label>
-          <input matInput type="number" step="0.01" formControlName="currentKva" />
-          <mat-icon matPrefix>flash_on</mat-icon>
-          <mat-hint>Current meter reading</mat-hint>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Current KVA</span>
+            </div>
+            <input 
+              type="number" 
+              step="0.01"
+              class="custom-input" 
+              formControlName="currentKva" 
+            />
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Current meter reading</div>
+        </div>
       </div>
 
       <div class="rounded-soft border border-primary/20 bg-primary/5 p-4" *ngIf="getKvaDifference() !== null">
@@ -108,44 +159,83 @@
       <div class="form-section-title">Billing Calculation</div>
       
       <div class="form-grid">
-        <mat-form-field appearance="outline" *ngIf="getSelectedCustomer()?.billingMode === 'METERED'">
-          <mat-label>Subscription Fee (Variable) per KVA</mat-label>
-          <input matInput type="number" step="0.01" formControlName="subscriptionFeeVar" />
-          <mat-icon matPrefix>calculate</mat-icon>
-          <mat-hint>Rate per KVA</mat-hint>
-        </mat-form-field>
+        <div class="custom-input-container" *ngIf="getSelectedCustomer()?.billingMode === 'METERED'">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Subscription Fee (Variable) per KVA</span>
+            </div>
+            <input 
+              type="number" 
+              step="0.01"
+              class="custom-input" 
+              formControlName="subscriptionFeeVar" 
+            />
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Rate per KVA</div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Subscription Fee (Fixed)</mat-label>
-          <input matInput type="number" step="0.01" formControlName="subscriptionFeeFixed" />
-          <mat-icon matPrefix>attach_money</mat-icon>
-          <mat-hint>Flat fee amount</mat-hint>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Subscription Fee (Fixed)</span>
+            </div>
+            <input 
+              type="number" 
+              step="0.01"
+              class="custom-input" 
+              formControlName="subscriptionFeeFixed" 
+            />
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Flat fee amount</div>
+        </div>
       </div>
 
-      <mat-form-field appearance="outline" class="form-field-full">
-        <mat-label>Total Amount (USD)</mat-label>
-        <input matInput type="number" step="0.01" formControlName="totalAmount" required />
-        <mat-icon matPrefix>payments</mat-icon>
-        <mat-error *ngIf="form.controls.totalAmount.hasError('required')">
+      <div class="custom-input-container">
+        <div class="custom-input-wrapper" [class.error]="form.controls.totalAmount.touched && form.controls.totalAmount.invalid">
+          <div class="custom-input-label">
+            <span class="label-text">Total Amount (USD)<span class="required-asterisk">*</span></span>
+          </div>
+          <input 
+            type="number" 
+            step="0.01"
+            class="custom-input" 
+            formControlName="totalAmount" 
+          />
+        </div>
+        <div class="custom-error" *ngIf="form.controls.totalAmount.touched && form.controls.totalAmount.hasError('required')">
           Total amount is required
-        </mat-error>
-      </mat-form-field>
+        </div>
+      </div>
 
       <div class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Amount (USD)</mat-label>
-          <input matInput type="number" step="0.01" formControlName="amountUSD" />
-          <mat-icon matPrefix>attach_money</mat-icon>
-          <mat-hint>Optional: specify USD amount separately</mat-hint>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Amount (USD)</span>
+            </div>
+            <input 
+              type="number" 
+              step="0.01"
+              class="custom-input" 
+              formControlName="amountUSD" 
+            />
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Optional: specify USD amount separately</div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Amount (LBP)</mat-label>
-          <input matInput type="number" formControlName="amountLBP" />
-          <mat-icon matPrefix>currency_lira</mat-icon>
-          <mat-hint>Optional: LBP equivalent</mat-hint>
-        </mat-form-field>
+        <div class="custom-input-container">
+          <div class="custom-input-wrapper">
+            <div class="custom-input-label">
+              <span class="label-text">Amount (LBP)</span>
+            </div>
+            <input 
+              type="number" 
+              class="custom-input" 
+              formControlName="amountLBP" 
+            />
+          </div>
+          <div class="text-xs text-muted mt-1 pl-1">Optional: LBP equivalent</div>
+        </div>
       </div>
     </div>
 
@@ -153,17 +243,34 @@
     <div class="form-section">
       <div class="form-section-title">Additional Information</div>
       
-      <mat-form-field appearance="outline" class="form-field-full">
-        <mat-label>Subscription Amps</mat-label>
-        <input matInput type="number" step="0.01" formControlName="subscriptionAmps" />
-        <mat-icon matPrefix>bolt</mat-icon>
-      </mat-form-field>
+      <div class="custom-input-container">
+        <div class="custom-input-wrapper">
+          <div class="custom-input-label">
+            <span class="label-text">Subscription Amps</span>
+          </div>
+          <input 
+            type="number" 
+            step="0.01"
+            class="custom-input" 
+            formControlName="subscriptionAmps" 
+          />
+        </div>
+      </div>
 
-      <mat-form-field appearance="outline" class="form-field-full">
-        <mat-label>Notes</mat-label>
-        <textarea matInput formControlName="notes" rows="3" placeholder="Additional notes or comments"></textarea>
-        <mat-icon matPrefix>notes</mat-icon>
-      </mat-form-field>
+      <div class="custom-input-container">
+        <div class="custom-input-wrapper">
+          <div class="custom-input-label">
+            <span class="label-text">Notes</span>
+          </div>
+          <textarea 
+            class="custom-input" 
+            formControlName="notes"
+            rows="3" 
+            placeholder="Additional notes or comments"
+            style="resize: vertical; min-height: 100px;"
+          ></textarea>
+        </div>
+      </div>
     </div>
 
     <!-- Amount Summary -->

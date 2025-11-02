@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +17,8 @@ import { SmsTemplateRecord } from '../../../../../core/models/domain.models';
 @Component({
   selector: 'app-sms-templates',
   imports: [
-    CommonModule, 
+    CommonModule,
+    RouterLink,
     ReactiveFormsModule, 
     MatButtonModule, 
     MatInputModule, 
@@ -54,8 +56,16 @@ export class SmsTemplatesComponent {
 
   async load(): Promise<void> {
     this.loading = true;
-    this.templates = await this.api.getSmsTemplates(this.auth.getOwnerIdOrThrow());
-    this.loading = false;
+    try {
+      this.templates = await this.api.getSmsTemplates(this.auth.getOwnerIdOrThrow());
+    } catch (error: any) {
+      console.error('[SMS Templates] Failed to load:', error);
+      const errorMsg = error?.message || 'Failed to load templates. Please ensure you are logged in.';
+      this.snackBar.open(errorMsg, 'Close', { duration: 5000 });
+      this.templates = [];
+    } finally {
+      this.loading = false;
+    }
   }
 
   edit(template: SmsTemplateRecord): void {
@@ -79,13 +89,13 @@ export class SmsTemplatesComponent {
   async delete(id: string): Promise<void> {
     if (confirm('Are you sure you want to delete this template?')) {
       try {
-        await this.api.deleteSmsTemplate?.(this.auth.getOwnerIdOrThrow(), id);
+        await this.api.deleteSmsTemplate(this.auth.getOwnerIdOrThrow(), id);
         this.templates = this.templates.filter(t => t.id !== id);
-        this.snackBar.open('Template deleted', 'Close', { duration: 3000 });
-      } catch (error) {
-        // Fallback if delete not implemented
-        this.templates = this.templates.filter(t => t.id !== id);
-        this.snackBar.open('Template deleted', 'Close', { duration: 3000 });
+        this.snackBar.open('Template deleted successfully', 'Close', { duration: 3000 });
+      } catch (error: any) {
+        console.error('[SMS Templates] Failed to delete:', error);
+        const errorMsg = error?.message || 'Failed to delete template.';
+        this.snackBar.open(errorMsg, 'Close', { duration: 5000 });
       }
     }
   }
@@ -135,8 +145,10 @@ export class SmsTemplatesComponent {
       );
       this.cancel();
       await this.load();
-    } catch (error) {
-      this.snackBar.open('Failed to save template', 'Close', { duration: 4000 });
+    } catch (error: any) {
+      console.error('[SMS Templates] Failed to save:', error);
+      const errorMsg = error?.message || 'Failed to save template. Please check your connection.';
+      this.snackBar.open(errorMsg, 'Close', { duration: 5000 });
     } finally {
       this.loading = false;
     }

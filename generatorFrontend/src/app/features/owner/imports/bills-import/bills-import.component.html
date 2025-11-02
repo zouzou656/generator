@@ -1,13 +1,32 @@
 <section class="space-y-6">
   <div class="flex items-center justify-between">
     <div>
-      <h1 class="text-3xl font-semibold text-text">{{ 'owner.imports.title' | t }}</h1>
-      <p class="text-sm text-muted mt-1">Import bills from CSV/Excel files in bulk</p>
+      <h2 class="text-2xl font-semibold text-text">Bills Import</h2>
+      <p class="text-sm text-muted mt-1">Import bills from CSV/Excel files in bulk or add manually</p>
     </div>
   </div>
 
+  <!-- Action Buttons -->
+  <div class="flex items-center gap-4 mb-6">
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="openManualEntryDialog(true)"
+    >
+      <mat-icon>receipt</mat-icon>
+      <span class="ml-2">Add Single Bill</span>
+    </button>
+    <button 
+      mat-stroked-button
+      (click)="openManualEntryDialog(false)"
+    >
+      <mat-icon>receipt_long</mat-icon>
+      <span class="ml-2">Add Multiple Bills</span>
+    </button>
+  </div>
+
   <!-- File Upload Area -->
-  <div class="card-form">
+  <div class="rounded-soft border border-white/10 bg-surface/95 p-6 shadow-soft">
     <h2 class="text-xl font-semibold text-text mb-4">Upload File</h2>
     
     <div 
@@ -74,7 +93,7 @@
   </div>
 
   <!-- Data Preview -->
-  <div class="card-form" *ngIf="rows.length > 0">
+  <div class="rounded-soft border border-white/10 bg-surface/95 p-6 shadow-soft" *ngIf="rows.length > 0">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-text">
         Data Preview ({{ rows.length }} rows)
@@ -137,7 +156,7 @@
   </div>
 
   <!-- Import History -->
-  <div class="card-form" *ngIf="importBatches.length > 0">
+  <div class="rounded-soft border border-white/10 bg-surface/95 p-6 shadow-soft" *ngIf="importBatches.length > 0">
     <h2 class="text-xl font-semibold text-text mb-4">Recent Imports</h2>
     <div class="space-y-3">
       <div 

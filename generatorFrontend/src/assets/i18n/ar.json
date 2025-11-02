@@ -161,6 +161,7 @@
       "bills": "الفواتير",
       "imports": "الاستيراد",
       "sms": "الرسائل",
+      "smsTemplates": "قوالب الرسائل",
       "reports": "التقارير"
     },
     "dashboard": {

@@ -1,0 +1,33 @@
+<section class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold text-text">Imports</h1>
+      <p class="text-sm text-muted mt-1">Import customers and bills from files or enter manually. Duplicate checking is handled automatically.</p>
+    </div>
+  </div>
+
+  <div class="rounded-soft border border-white/10 bg-surface/95 shadow-soft">
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="mr-2">receipt</mat-icon>
+          Bills
+        </ng-template>
+        <div class="p-6">
+          <app-bills-import></app-bills-import>
+        </div>
+      </mat-tab>
+      
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="mr-2">people</mat-icon>
+          Customers
+        </ng-template>
+        <div class="p-6">
+          <app-customers-import></app-customers-import>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</section>
+

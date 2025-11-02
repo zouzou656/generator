@@ -79,7 +79,17 @@
         </mat-chip>
       </div>
 
-      <div class="space-y-2 mb-4 text-sm">
+      <div class="space-y-2 mb-4 text-sm border-t border-white/10 pt-3">
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="font-semibold text-text">ID:</span>
+            <span class="text-muted font-mono">#{{ customer.id }}</span>
+          </div>
+          <div>
+            <span class="font-semibold text-text">Customer ID:</span>
+            <span class="text-muted font-mono">#{{ customer.customerId }}</span>
+          </div>
+        </div>
         <div class="flex items-center gap-2 text-muted" *ngIf="customer.zone">
           <mat-icon class="text-base">location_on</mat-icon>
           <span>{{ customer.zone }}</span>
@@ -91,6 +101,14 @@
         <div class="flex items-center gap-2 text-muted" *ngIf="customer.subscriptionAmps">
           <mat-icon class="text-base">bolt</mat-icon>
           <span>{{ customer.subscriptionAmps }}A · {{ customer.billingMode || 'METERED' }}</span>
+        </div>
+        <div class="flex items-center gap-2 text-muted" *ngIf="customer.defaultNameOnBill">
+          <mat-icon class="text-base">badge</mat-icon>
+          <span>Bill Name: {{ customer.defaultNameOnBill }}</span>
+        </div>
+        <div class="flex items-center gap-2 text-muted">
+          <mat-icon class="text-base">calendar</mat-icon>
+          <span>Created: {{ customer.createdAt | date: 'short' }}</span>
         </div>
       </div>
 

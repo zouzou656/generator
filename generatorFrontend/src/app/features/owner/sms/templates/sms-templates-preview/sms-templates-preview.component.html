@@ -1,0 +1,151 @@
+<section class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-semibold text-text">SMS Template Preview</h1>
+      <p class="text-sm text-muted mt-1">See how your templates look with sample data</p>
+    </div>
+    <button mat-stroked-button routerLink="/owner/sms/templates">
+      <mat-icon>edit</mat-icon>
+      <span class="ml-2">Edit Templates</span>
+    </button>
+  </div>
+
+  <div class="flex gap-6" *ngIf="!loading && templates.length > 0">
+    <!-- Templates Sidebar -->
+    <div class="w-80 flex-shrink-0">
+      <div class="rounded-soft border border-white/10 bg-surface/95 p-4">
+        <h2 class="text-lg font-semibold text-text mb-4">Templates</h2>
+        <div class="space-y-2 max-h-[600px] overflow-y-auto">
+          <button
+            *ngFor="let template of templates"
+            type="button"
+            (click)="selectTemplate(template)"
+            [class]="'w-full text-left p-3 rounded-soft border transition-all ' + 
+                     (selectedTemplate?.id === template.id ? 'bg-primary/20 border-primary' : 'border-white/10')"
+          >
+            <div class="font-semibold text-text mb-1">{{ template.name }}</div>
+            <div class="text-xs text-muted line-clamp-2">{{ template.body }}</div>
+            <div class="text-xs text-muted mt-2">
+              {{ template.body.length }} chars · {{ getSmsCount(template.body.length) }} SMS
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Area -->
+    <div class="flex-1" *ngIf="selectedTemplate">
+      <div class="rounded-soft border border-white/10 bg-surface/95 p-6 space-y-6">
+        <div>
+          <h2 class="text-2xl font-semibold text-text mb-2">{{ selectedTemplate.name }}</h2>
+          <div class="flex items-center gap-4 text-sm text-muted">
+            <span>
+              <mat-icon class="align-middle text-sm">textsms</mat-icon>
+              {{ selectedTemplate.body.length }} characters
+            </span>
+            <span>
+              <mat-icon class="align-middle text-sm">sms</mat-icon>
+              {{ getSmsCount(selectedTemplate.body.length) }} SMS message(s)
+            </span>
+            <span *ngIf="selectedTemplate.updatedAt">
+              <mat-icon class="align-middle text-sm">schedule</mat-icon>
+              Updated {{ selectedTemplate.updatedAt | date: 'short' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Template Body -->
+        <div>
+          <h3 class="text-sm font-semibold text-text mb-2">Template Body</h3>
+          <div class="bg-surface/50 p-4 rounded-soft border border-white/10">
+            <pre class="whitespace-pre-wrap text-sm text-muted font-mono">{{ selectedTemplate.body }}</pre>
+          </div>
+        </div>
+
+        <!-- Preview with Sample Data -->
+        <div>
+          <h3 class="text-sm font-semibold text-text mb-2">Preview with Sample Data</h3>
+          <div class="bg-gradient-to-br from-primary/10 to-accent/10 p-6 rounded-soft border-2 border-primary/30">
+            <div class="flex items-start gap-3 mb-4">
+              <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
+                <mat-icon class="text-primary">phone</mat-icon>
+              </div>
+              <div class="flex-1">
+                <div class="text-xs text-muted mb-1">SMS Preview</div>
+                <div class="bg-white/95 dark:bg-surface/95 p-4 rounded-lg shadow-lg">
+                  <div class="whitespace-pre-wrap text-sm text-text leading-relaxed">
+                    {{ getPreviewText(selectedTemplate) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-xs text-muted mt-4">
+              <div class="grid grid-cols-2 gap-2">
+                <div><strong>To:</strong> {{ sampleData.phoneNumber }}</div>
+                <div><strong>From:</strong> Generator System</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholders Info -->
+        <div>
+          <h3 class="text-sm font-semibold text-text mb-2">Placeholders Used</h3>
+          <div class="flex flex-wrap gap-2">
+            <mat-chip *ngIf="selectedTemplate.body.includes('{{name}}')" selected>
+              {{ '{{name}}' }} → {{ sampleData.name }}
+            </mat-chip>
+            <mat-chip *ngIf="selectedTemplate.body.includes('{{amount}}')" selected>
+              {{ '{{amount}}' }} → {{ sampleData.amount }}
+            </mat-chip>
+            <mat-chip *ngIf="selectedTemplate.body.includes('{{period}}')" selected>
+              {{ '{{period}}' }} → {{ sampleData.period }}
+            </mat-chip>
+            <mat-chip *ngIf="selectedTemplate.body.includes('{{dueDate}}')" selected>
+              {{ '{{dueDate}}' }} → {{ sampleData.dueDate }}
+            </mat-chip>
+            <mat-chip *ngIf="selectedTemplate.body.includes('{{subscriptionNumber}}')" selected>
+              {{ '{{subscriptionNumber}}' }} → {{ sampleData.subscriptionNumber }}
+            </mat-chip>
+            <mat-chip *ngIf="selectedTemplate.body.includes('{{phoneNumber}}')" selected>
+              {{ '{{phoneNumber}}' }} → {{ sampleData.phoneNumber }}
+            </mat-chip>
+            <span *ngIf="!hasPlaceholders(selectedTemplate.body)" class="text-sm text-muted">
+              No placeholders used in this template
+            </span>
+          </div>
+        </div>
+
+        <!-- Sample Data -->
+        <div class="rounded-soft border border-primary/20 bg-primary/5 p-4">
+          <h3 class="text-sm font-semibold text-text mb-3">Sample Data Used for Preview</h3>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div><strong>Name:</strong> {{ sampleData.name }}</div>
+            <div><strong>Amount:</strong> {{ sampleData.amount }}</div>
+            <div><strong>Period:</strong> {{ sampleData.period }}</div>
+            <div><strong>Due Date:</strong> {{ sampleData.dueDate }}</div>
+            <div><strong>Subscription:</strong> {{ sampleData.subscriptionNumber }}</div>
+            <div><strong>Phone:</strong> {{ sampleData.phoneNumber }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex items-center justify-center p-12">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && templates.length === 0" class="rounded-soft border border-white/10 bg-surface/90 px-8 py-12 text-center">
+    <mat-icon class="text-6xl text-muted mb-4">message</mat-icon>
+    <h3 class="text-lg font-semibold text-text mb-2">No templates found</h3>
+    <p class="text-sm text-muted mb-6">Create templates first to preview them</p>
+    <button mat-raised-button color="primary" routerLink="/owner/sms/templates">
+      <mat-icon>add</mat-icon>
+      <span class="ml-2">Create Template</span>
+    </button>
+  </div>
+</section>
+

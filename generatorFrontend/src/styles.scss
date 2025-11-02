@@ -595,3 +595,213 @@ mat-icon {
     --mdc-switch-selected-handle-color: rgb(var(--primary-contrast));
   }
 }
+
+// Custom Modern Tablet-Style Inputs - Reusable across platform
+.custom-input-container {
+  margin-bottom: 1rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.custom-input-wrapper {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid rgb(var(--muted) / 0.3);
+  border-radius: calc(var(--radius) * 0.75);
+  background: rgb(var(--surface));
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    border-color: rgb(var(--primary) / 0.4);
+    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:focus-within {
+    border-color: rgb(var(--primary));
+    box-shadow: 0 0 0 4px rgb(var(--primary) / 0.15),
+                0 4px 12px -2px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.error {
+    border-color: rgb(var(--danger));
+    
+    &:focus-within {
+      box-shadow: 0 0 0 4px rgb(var(--danger) / 0.15);
+    }
+  }
+}
+
+.custom-select-wrapper {
+  display: flex;
+  align-items: stretch;
+  border: 1.5px solid rgb(var(--muted) / 0.3);
+  border-radius: calc(var(--radius) * 0.75);
+  background: rgb(var(--surface));
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    border-color: rgb(var(--primary) / 0.4);
+    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:focus-within {
+    border-color: rgb(var(--primary));
+    box-shadow: 0 0 0 4px rgb(var(--primary) / 0.15),
+                0 4px 12px -2px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.error {
+    border-color: rgb(var(--danger));
+    
+    &:focus-within {
+      box-shadow: 0 0 0 4px rgb(var(--danger) / 0.15);
+    }
+  }
+
+  select {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    background: transparent;
+    color: rgb(var(--text));
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    padding-right: 3rem;
+    min-height: 3rem;
+
+    &[multiple] {
+      background-image: none;
+      padding-right: 1.5rem;
+      min-height: 120px;
+    }
+
+    option {
+      background: rgb(var(--surface));
+      color: rgb(var(--text));
+      padding: 0.5rem;
+      
+      &:checked {
+        background: rgb(var(--primary) / 0.2);
+        color: rgb(var(--primary));
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.custom-input-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  background: rgb(var(--muted) / 0.08);
+  border-right: 1.5px solid rgb(var(--muted) / 0.2);
+  min-width: 180px;
+  
+  .label-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(var(--text));
+    letter-spacing: 0.01em;
+    margin-bottom: 0.25rem;
+    
+    .required-asterisk {
+      color: rgb(var(--danger));
+      margin-left: 0.25rem;
+    }
+  }
+  
+  .label-value {
+    font-size: 0.8125rem;
+    color: rgb(var(--muted));
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.05em;
+  }
+  
+  // Responsive design for mobile
+  @media (max-width: 640px) {
+    min-width: 120px;
+    padding: 0.875rem 1rem;
+    
+    .label-text {
+      font-size: 0.8125rem;
+    }
+    
+    .label-value {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.custom-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  background: transparent;
+  color: rgb(var(--text));
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  
+  &::placeholder {
+    color: rgb(var(--muted));
+    opacity: 0.5;
+    font-size: 0.9375rem;
+  }
+  
+  // Remove default number input styling
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  &[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  
+  &[type=date],
+  &[type=datetime-local],
+  &[type=time] {
+    cursor: pointer;
+  }
+  
+  // Responsive design for mobile
+  @media (max-width: 640px) {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    
+    &::placeholder {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.custom-error {
+  font-size: 0.8125rem;
+  color: rgb(var(--danger));
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &::before {
+    content: '⚠';
+    font-size: 0.875rem;
+  }
+}

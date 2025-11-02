@@ -114,13 +114,14 @@ export class MockApiClient implements ApiClient {
       throw new Error('Mock data not initialised');
     }
 
-    const account = data.users.find((u) => u.email === payload.email && u.role === payload.role);
+    // Role is auto-detected from user account
+    const account = data.users.find((u) => u.email === payload.email);
 
     if (!account) {
       throw new Error('Invalid credentials');
     }
 
-    const token = btoa(`${account.id}:${payload.role}:${Date.now()}`);
+    const token = btoa(`${account.id}:${account.role}:${Date.now()}`);
     const exp = Date.now() + 1000 * 60 * environment.idle.logoutMinutes;
 
     const session: AuthSession = {

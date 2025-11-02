@@ -28,13 +28,17 @@ export const usersFeature = createFeature({
       loading: true,
       error: undefined
     })),
-    on(UsersActions.loadUsersSuccess, (state, { users }) =>
-      usersAdapter.setAll(users, {
+    on(UsersActions.loadUsersSuccess, (state, { users }) => {
+      console.log('[UsersReducer] loadUsersSuccess - received users:', users);
+      console.log('[UsersReducer] loadUsersSuccess - users count:', users?.length);
+      const newState = usersAdapter.setAll(users, {
         ...state,
         loading: false,
         loaded: true
-      })
-    ),
+      });
+      console.log('[UsersReducer] loadUsersSuccess - new state ids:', newState.ids);
+      return newState;
+    }),
     on(UsersActions.loadUsersFailure, (state, { error }) => ({
       ...state,
       loading: false,

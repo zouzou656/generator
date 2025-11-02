@@ -11,6 +11,8 @@ import { API_CLIENT, ApiClient, BillImportRow } from '../../../../core/api/api-c
 import { ImportBatchRecord } from '../../../../core/models/domain.models';
 import { parseImportFile } from '../../../../shared/utils/import-parser';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { BillManualEntryDialogComponent } from './bill-manual-entry-dialog/bill-manual-entry-dialog.component';
 
 @Component({
   selector: 'app-bills-import',
@@ -21,7 +23,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatChipsModule,
     MatMenuModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule, 
+    MatSnackBarModule,
+    MatDialogModule,
     TranslatePipe
   ],
   templateUrl: './bills-import.component.html',
@@ -31,6 +34,7 @@ export class BillsImportComponent {
   private readonly auth = inject(AuthService);
   private readonly api = inject<ApiClient>(API_CLIENT);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   selectedFile: File | null = null;
   rows: BillImportRow[] = [];
@@ -45,8 +49,10 @@ export class BillsImportComponent {
   async loadImportHistory(): Promise<void> {
     try {
       this.importBatches = await this.api.getImportBatches(this.auth.getOwnerIdOrThrow());
-    } catch (error) {
-      // Silently fail if not implemented
+    } catch (error: any) {
+      console.error('[Bills Import] Failed to load history:', error);
+      // Don't show error to user if it's just history not loading
+      this.importBatches = [];
     }
   }
 
@@ -116,6 +122,21 @@ export class BillsImportComponent {
     this.parsingError = null;
   }
 
+  openManualEntryDialog(single: boolean = true): void {
+    const dialogRef = this.dialog.open(BillManualEntryDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      data: { single }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.bills && result.bills.length > 0) {
+        this.rows = [...this.rows, ...result.bills];
+        this.selectedFile = null; // Clear file since we're using manual entry
+      }
+    });
+  }
+
   downloadTemplate(): void {
     // Create CSV template
     const headers = ['subscriptionNumber', 'periodYear', 'periodMonth', 'totalAmount', 'previousKva', 'currentKva', 'subscriptionFeeVar', 'subscriptionFeeFixed', 'nameOnBill', 'dueDate', 'notes', 'subscriptionAmps'];
@@ -158,7 +179,9 @@ export class BillsImportComponent {
       this.clearFile();
       await this.loadImportHistory();
     } catch (error: any) {
-      this.snackBar.open('Import failed. Please check your file format and try again.', 'Close', { duration: 4000 });
+      console.error('[Bills Import] Failed to import:', error);
+      const errorMsg = error?.message || 'Import failed. Please check your file format and try again.';
+      this.snackBar.open(errorMsg, 'Close', { duration: 5000 });
     } finally {
       this.importing = false;
     }

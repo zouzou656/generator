@@ -1,0 +1,189 @@
+<div class="p-6">
+  <h2 mat-dialog-title class="text-2xl font-semibold text-text mb-4">
+    {{ data.single ? 'Add Customer' : 'Add Multiple Customers' }}
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="form" class="space-y-4">
+      <div formArrayName="customers" class="space-y-6">
+        <div 
+          *ngFor="let customer of customers.controls; let i = index" 
+          [formGroupName]="i"
+          class="rounded-soft border border-white/10 bg-surface/50 p-4"
+        >
+          <div class="flex items-center justify-between mb-4" *ngIf="!data.single">
+            <h3 class="text-lg font-semibold text-text">Customer {{ i + 1 }}</h3>
+            <button 
+              mat-icon-button 
+              type="button"
+              (click)="removeCustomer(i)"
+              *ngIf="customers.length > 1"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper" [class.error]="getCustomerGroup(i).controls['phoneNumber'].touched && getCustomerGroup(i).controls['phoneNumber'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Phone Number<span class="required-asterisk">*</span></span>
+                </div>
+                <input 
+                  type="tel" 
+                  class="custom-input" 
+                  formControlName="phoneNumber" 
+                  placeholder="+96170123456"
+                />
+              </div>
+              <div class="custom-error" *ngIf="getCustomerGroup(i).controls['phoneNumber'].touched && getCustomerGroup(i).controls['phoneNumber'].hasError('required')">
+                Phone number is required
+              </div>
+              <div class="custom-error" *ngIf="getCustomerGroup(i).controls['phoneNumber'].touched && getCustomerGroup(i).controls['phoneNumber'].hasError('pattern')">
+                Invalid phone number format
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper" [class.error]="getCustomerGroup(i).controls['subscriptionNumber'].touched && getCustomerGroup(i).controls['subscriptionNumber'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Subscription Number<span class="required-asterisk">*</span></span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="subscriptionNumber" 
+                  placeholder="SUB1201"
+                />
+              </div>
+              <div class="custom-error" *ngIf="getCustomerGroup(i).controls['subscriptionNumber'].touched && getCustomerGroup(i).controls['subscriptionNumber'].hasError('required')">
+                Subscription number is required
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">First Name</span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="firstName" 
+                  placeholder="John"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Last Name</span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="lastName" 
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Zone</span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="zone" 
+                  placeholder="Zone A"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Address</span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="address" 
+                  placeholder="Beirut, Lebanon"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Subscription Amps</span>
+                </div>
+                <input 
+                  type="number" 
+                  class="custom-input" 
+                  formControlName="subscriptionAmps" 
+                  placeholder="10"
+                />
+              </div>
+            </div>
+
+            <div class="custom-input-container">
+              <div class="custom-select-wrapper" [class.error]="getCustomerGroup(i).controls['billingMode'].touched && getCustomerGroup(i).controls['billingMode'].invalid">
+                <div class="custom-input-label">
+                  <span class="label-text">Billing Mode<span class="required-asterisk">*</span></span>
+                </div>
+                <select class="custom-input" formControlName="billingMode">
+                  <option value="FIXED">Fixed</option>
+                  <option value="METERED">Metered</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="custom-input-container md:col-span-2">
+              <div class="custom-input-wrapper">
+                <div class="custom-input-label">
+                  <span class="label-text">Default Name on Bill</span>
+                </div>
+                <input 
+                  type="text" 
+                  class="custom-input" 
+                  formControlName="defaultNameOnBill" 
+                  placeholder="John Doe"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        mat-stroked-button 
+        type="button"
+        (click)="addCustomer()"
+        *ngIf="!data.single"
+        class="w-full"
+      >
+        <mat-icon>add</mat-icon>
+        <span class="ml-2">Add Another Customer</span>
+      </button>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="flex justify-end gap-3 pt-6">
+    <button mat-stroked-button (click)="cancel()">Cancel</button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="submit()"
+      [disabled]="form.invalid"
+    >
+      <mat-icon>save</mat-icon>
+      <span class="ml-2">Add {{ customers.length }} Customer(s)</span>
+    </button>
+  </mat-dialog-actions>
+</div>
+

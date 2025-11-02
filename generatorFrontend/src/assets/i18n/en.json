@@ -161,6 +161,7 @@
       "bills": "Bills",
       "imports": "Imports",
       "sms": "SMS",
+      "smsTemplates": "SMS Templates",
       "reports": "Reports"
     },
     "dashboard": {

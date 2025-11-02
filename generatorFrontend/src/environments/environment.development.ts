@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  useMockApi: true,
+  useMockApi: false,
+  apiUrl: 'http://localhost:5076',
   mockLatencyMs: 200,
   mockErrorRate: 0.02,
   idle: {
@@ -8,8 +9,3 @@ export const environment = {
     logoutMinutes: 30
   }
 };
-
-
-
-
-

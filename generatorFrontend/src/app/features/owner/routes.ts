@@ -66,6 +66,12 @@ export const OWNER_ROUTES: Routes = [
     data: { perms: ['TEMPLATE_WRITE'], title: 'SMS templates' }
   },
   {
+    path: 'sms/templates/preview',
+    loadComponent: () => import('./sms/templates/sms-templates-preview/sms-templates-preview.component').then(m => m.SmsTemplatesPreviewComponent),
+    canActivate: [permissionGuard],
+    data: { perms: ['TEMPLATE_WRITE'], title: 'Template Preview' }
+  },
+  {
     path: 'sms/campaigns',
     component: SmsCampaignsComponent,
     canActivate: [permissionGuard],
@@ -79,9 +85,9 @@ export const OWNER_ROUTES: Routes = [
   },
   {
     path: 'imports',
-    component: BillsImportComponent,
+    loadComponent: () => import('./imports/imports.component').then(m => m.ImportsComponent),
     canActivate: [permissionGuard],
-    data: { perms: ['BILL_IMPORT'], title: 'Imports' }
+    data: { perms: ['BILL_IMPORT', 'CUSTOMER_WRITE'], title: 'Imports' }
   },
   {
     path: 'reports',
